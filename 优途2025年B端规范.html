@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>优途专注UX/UI领域·2025年B端组件规范  </title>
+  <style>
+    /* 主题 Token（参考 Ant Design v5 色彩与主流 B 端规范） */
+    :root {
+      /* 色彩 */
+      --primary: #1677ff;      /* 主蓝（AntD 默认主色） */
+      --primary-hover: #3c8cff;
+      --primary-press: #0e5bd3;
+      --success: #52c41a;
+      --warning: #faad14;
+      --error: #f5222d;
+      --info: #2f54eb;
+      --link: #1677ff;
+      --text: #1f2329;        /* 主文案 */
+      --text-sub: #4e5969;     /* 次级文案 */
+      --muted: #86909c;        /* 说明文案 */
+      --line: #e5e6eb;         /* 分割线 */
+      --bg: #f7f8fa;           /* 页面背景 */
+      --surface: #ffffff;      /* 卡片白 */
+      --surface-2: #fbfbfc;    /* 次级面 */
+      /* 圆角 */
+      --radius-2: 2px;
+      --radius-6: 6px;
+      --radius-8: 8px;
+      --radius-12: 12px;
+      --round: 999px;
+      /* 间距（栅格单位） */
+      --sp-4: 4px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-24: 24px; --sp-32: 32px; --sp-40: 40px; --sp-48: 48px; --sp-64: 64px;
+      /* 阴影 */
+      --shadow-1: 0 1px 2px rgba(0,0,0,.06);
+      --shadow-2: 0 4px 10px rgba(0,0,0,.08);
+      --shadow-3: 0 8px 20px rgba(0,0,0,.10);
+      /* 字体 */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      --fz-12: 12px; --fz-14: 14px; --fz-16: 16px; --fz-20: 20px; --fz-24: 24px; --fz-32: 32px;
+      --fw-400: 400; --fw-500: 500; --fw-600: 600; --fw-700: 700;
+      /* 组件尺寸 */
+      --height-sm: 28px; --height-md: 36px; --height-lg: 44px;
+      --icon-12: 12px; --icon-14: 14px; --icon-16: 16px; --icon-20: 20px; --icon-24: 24px; --icon-32: 32px;
+      /* 过渡 */
+      --transition: all .2s ease;
+    }
+
+    @media(prefers-color-scheme: dark){
+      :root{
+        --text: #e6e8eb; --text-sub: #c8cdd3; --muted: #9aa3ab;
+        --bg: #0f1114; --surface: #15181c; --surface-2: #1a1e23; --line: #2a2f36;
+        --shadow-1: 0 1px 2px rgba(0,0,0,.4);
+        --shadow-2: 0 4px 10px rgba(0,0,0,.45);
+        --shadow-3: 0 8px 20px rgba(0,0,0,.5);
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+    /* 页面容器（1920px固定宽度） */
+    /* 页面布局：左侧导航固定，右侧内容滚动，不挤压左侧导航 */
+    .page{width:1920px;min-height:100vh;margin:0 auto;display:block}
+    .sidebar{background:var(--surface);border-right:1px solid var(--line);padding:var(--sp-24);position:fixed;left:0;top:0;width:280px;height:100vh;overflow:auto;box-shadow:var(--shadow-1)}
+    .main{padding:var(--sp-24);margin-left:304px;max-width:calc(1920px - 304px)}
+
+    /* 顶部标题 */
+    .title{font-size:var(--fz-32);font-weight:700;margin:0 0 var(--sp-16)}
+    .subtitle{color:var(--muted);font-size:var(--fz-14);margin:0 0 var(--sp-24)}
+
+    /* 卡片 */
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-8);box-shadow:var(--shadow-1);padding:var(--sp-24);margin-bottom:var(--sp-24)}
+    .card h2{margin:0 0 var(--sp-16);font-size:var(--fz-20)}
+    .card .desc{color:var(--text-sub);font-size:var(--fz-14);margin-bottom:var(--sp-16)}
+
+    /* 通用控件样式 */
+    .btn{display:inline-flex;align-items:center;gap:8px;height:var(--height-md);padding:0 16px;border-radius:var(--radius-6);border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:var(--fz-14);cursor:pointer;transition:var(--transition)}
+    .btn:hover{box-shadow:var(--shadow-2)}
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.5;pointer-events:none}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn.primary:hover{background:var(--primary-hover)}
+    .btn.primary:active{background:var(--primary-press)}
+    .btn.dashed{border-style:dashed}
+    .btn.link{background:transparent;border-color:transparent;color:var(--link)}
+    .btn.text{background:transparent;border-color:transparent}
+    .btn.success{background:var(--success);color:#fff;border-color:var(--success)}
+    .btn.warning{background:var(--warning);color:#fff;border-color:var(--warning)}
+    .btn.error{background:var(--error);color:#fff;border-color:var(--error)}
+    .btn.sm{height:var(--height-sm);padding:0 12px}
+    .btn.lg{height:var(--height-lg);padding:0 20px;font-size:var(--fz-16)}
+    .btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.6);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .row{display:flex;flex-wrap:wrap;gap:var(--sp-16);align-items:center}
+    .col{display:flex;flex-direction:column;gap:var(--sp-8)}
+
+    /* 表单输入（对齐优化） */
+    .field{display:flex;align-items:center;gap:8px;height:var(--height-md);padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-6);background:var(--surface);box-shadow:var(--shadow-1)}
+    .field input,.field select,.field textarea{border:none;outline:none;background:transparent;font-size:var(--fz-14);color:var(--text);width:100%}
+    /* 单行输入与选择统一高度与行高，确保垂直居中 */
+    .field input,.field select{height:100%;line-height:calc(var(--height-md) - 2px);padding:0;}
+    .field select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background:transparent}
+    .field textarea{min-height:88px;padding:12px 0;resize:vertical}
+    /* 前缀统一最小宽度，横向对齐 */
+    .field .prefix{color:var(--muted);min-width:56px;display:inline-flex;align-items:center}
+    /* 右侧动作（如清空）采用横排文本样式 */
+    .field .action{margin-left:8px;color:var(--link);white-space:nowrap;cursor:pointer;user-select:none}
+    /* 后缀（如搜索图标） */
+    .field .suffix{display:inline-flex;align-items:center;color:var(--muted)}
+    /* 小图标（如搜索）统一尺寸与颜色 */
+    svg.icon{width:16px;height:16px;color:var(--muted)}
+    .field:hover{box-shadow:var(--shadow-2)}
+    .field:focus-within{border-color:var(--primary);box-shadow:0 0 0 2px rgba(22,119,255,.15)}
+
+    /* 单行输入框状态展示（静态示例用） */
+    .input-spec{display:flex;flex-direction:column;gap:12px}
+    .input-row{display:flex;align-items:center;gap:24px}
+    .state-label{color:var(--muted);width:56px}
+    .field.is-hover{box-shadow:var(--shadow-2)}
+    .field.is-active{border-color:var(--primary);box-shadow:0 0 0 2px rgba(22,119,255,.15)}
+    .field.is-disabled{background:#f5f5f5;border-color:#e5e6eb}
+    .field.is-disabled input{color:#bfbfbf}
+    .field.is-error{border-color:#ffccc7;box-shadow:0 0 0 2px rgba(245,34,45,.15)}
+    .msg-inline{margin-top:4px;color:#cf1322;font-size:12px}
+
+    /* 多行输入框（Textarea）按截图规范 */
+    .textarea-grid{gap:24px}
+    .ta{display:flex;flex-direction:column;gap:8px}
+    .ta-label{color:var(--muted)}
+    .ta-field{align-items:flex-start;padding:8px 12px}
+    .ta-field textarea{height:100px;min-height:100px;padding:0;line-height:1.6}
+    .ta-count{font-size:12px;color:var(--muted);text-align:right}
+    .ta-field.is-error{background:#fff2f0}
+
+    /* 数字输入与微调器 */
+    .number{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:var(--radius-6);overflow:hidden}
+    .number input{width:100px;text-align:center;height:var(--height-md)}
+    .stepper{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius-6);overflow:hidden}
+    .stepper button{width:36px;height:var(--height-md);border:none;background:var(--surface-2);cursor:pointer}
+    .stepper button:hover{background:#f0f1f5}
+
+    /* 开关 */
+    .switch{position:relative;width:48px;height:28px;background:#dcdfe6;border-radius:var(--round);cursor:pointer;border:1px solid var(--line);transition:var(--transition)}
+    .switch .dot{position:absolute;left:2px;top:2px;width:24px;height:24px;background:#fff;border-radius:var(--round);box-shadow:var(--shadow-1);transition:var(--transition)}
+    .switch.on{background:rgba(22,119,255,.25);border-color:var(--primary)}
+    .switch.on .dot{left:22px;background:var(--primary)}
+
+    /* 单选与复选框（参考截图设计） */
+    .rc-grid{display:flex;flex-direction:column;gap:12px}
+    .rc-row{display:flex;align-items:center;gap:24px}
+    .rc-row .label{color:var(--muted);width:72px}
+    .rc-cells{display:flex;gap:32px;flex-wrap:wrap}
+    .rc-cell{display:flex;align-items:center;gap:8px;color:#3a4048}
+    .rc-cell small{color:var(--muted)}
+
+    /* Radio */
+    .radio{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:2px solid #c9ced6;border-radius:50%;background:#fff;position:relative;cursor:pointer;transition:var(--transition)}
+    .radio::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--primary);transform:translate(-50%,-50%) scale(0);transition:var(--transition)}
+    .radio:hover{border-color:var(--primary)}
+    .rc-cell.is-hover .radio{border-color:var(--primary);box-shadow:0 0 0 3px rgba(22,119,255,.12)}
+    .radio:checked{border-color:var(--primary)}
+    .radio:checked::after{transform:translate(-50%,-50%) scale(1)}
+    .radio:disabled{border-color:#e5e6eb;background:#f5f5f5;cursor:not-allowed}
+    .radio:disabled:checked::after{background:#bfbfbf}
+    .radio.error{border-color:var(--error)}
+    .radio.error:checked::after{background:var(--error)}
+
+    /* Checkbox */
+    .checkbox{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:2px solid #c9ced6;border-radius:4px;background:#fff;position:relative;cursor:pointer;transition:var(--transition)}
+    .checkbox:hover{border-color:var(--primary)}
+    .rc-cell.is-hover .checkbox{border-color:var(--primary);box-shadow:0 0 0 3px rgba(22,119,255,.12)}
+    .checkbox:checked{background:var(--primary);border-color:var(--primary)}
+    /* 居中显示的对勾 */
+    .checkbox:checked::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:10px;border-bottom:2px solid #fff;border-right:2px solid #fff;transform:translate(-50%,-50%) rotate(45deg)}
+    .checkbox.half{border-color:var(--primary)}
+    /* 居中显示的中划线（部分选中） */
+    .checkbox.half::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:2px;background:var(--primary);border-radius:1px;transform:translate(-50%,-50%)}
+    .checkbox:disabled{border-color:#e5e6eb;background:#f5f5f5;cursor:not-allowed}
+    .checkbox:disabled:checked{background:#bfbfbf;border-color:#bfbfbf}
+    .checkbox.error{border-color:var(--error)}
+    .checkbox.error:checked{background:var(--error);border-color:var(--error)}
+
+    /* 滑块 */
+    .slider{width:300px}
+    .slider input[type=range]{width:100%}
+
+    /* 进度条 */
+    .progress{position:relative;width:300px;height:12px;border-radius:var(--round);background:#eef0f4;overflow:hidden;border:1px solid var(--line)}
+    .progress .bar{height:100%;background:linear-gradient(90deg,var(--primary),#69a8ff);width:40%}
+    .progress .text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;color:#333}
+
+    .c-progress{width:100px;height:100px}
+    .c-progress circle{fill:none;stroke-width:10}
+
+    /* 步骤条（Steps） */
+    .steps-demo{display:flex;flex-direction:column;gap:var(--sp-24)}
+    .steps-row{display:flex;align-items:flex-start;gap:var(--sp-16)}
+    .step{display:flex;align-items:flex-start;gap:12px}
+    .step .ico{width:28px;height:28px;border-radius:var(--round);border:2px solid #c9ced6;color:#86909c;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+    .step .ico svg{width:16px;height:16px}
+    .step .meta{display:flex;flex-direction:column;gap:2px}
+    .step .name{font-weight:600;color:var(--text)}
+    .step .desc{color:var(--muted);font-size:12px}
+    .step.waiting .name{color:#86909c}
+    .step.active .ico{background:var(--primary);border-color:var(--primary);color:#fff}
+    .step.done .ico{border-color:var(--primary);color:var(--primary);background:#fff}
+    .steps-row .line{width:160px;height:1px;background:#e5e6eb;margin-top:14px}
+    .steps-row .line.done{background:var(--primary)}
+
+    /* 标签与头像 */
+    .tag{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:var(--round);font-size:12px;border:1px solid var(--line);background:#fff;color:#3a4048}
+    .tag.primary{border-color:var(--primary);color:var(--primary);background:#e8f3ff}
+    .tag.success{border-color:var(--success);color:var(--success);background:#e9f7e6}
+    .tag.warning{border-color:var(--warning);color:var(--warning);background:#fff3e0}
+    .tag.error{border-color:var(--error);color:var(--error);background:#ffe8e6}
+    .avatar{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--round);background:#e5f0ff;color:#1f5fd3;font-weight:600}
+    .avatar.sm{width:24px;height:24px;font-size:12px}
+    .avatar.md{width:32px;height:32px;font-size:14px}
+    .avatar.lg{width:40px;height:40px;font-size:16px}
+    .avatar.xl{width:56px;height:56px;font-size:18px}
+
+    /* 提示类消息（按截图风格：通知与banner态） */
+    .msg{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius-6);background:var(--surface-2);color:var(--text);}
+    .msg.small{padding:6px 10px}
+    .msg .icon{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:var(--round);background:#fff;color:inherit;border:1px solid currentColor}
+    .msg .content{flex:1}
+    .msg .link{color:var(--link);margin-left:12px;white-space:nowrap}
+    .msg .close{margin-left:auto;color:var(--muted);cursor:pointer;user-select:none}
+    .msg.success{border-color:#b7eb8f;background:#f6ffed;color:#135200}
+    .msg.info{border-color:#adc6ff;background:#f0f5ff;color:#1d39c4}
+    .msg.warning{border-color:#ffe58f;background:#fffbe6;color:#ad6800}
+    .msg.error{border-color:#ffccc7;background:#fff2f0;color:#a8071a}
+
+    /* banner 态：更大内边距与更宽布局视觉 */
+    .msg.banner{padding:12px 16px}
+    .msg.banner .icon{width:22px;height:22px}
+
+    /* 全局 Toast（保留原能力） */
+    .toast-wrap{position:fixed;right:24px;top:24px;display:flex;flex-direction:column;gap:12px;z-index:9999}
+    .toast{min-width:280px;padding:10px 12px;border-radius:var(--radius-6);box-shadow:var(--shadow-2);color:#fff}
+    .toast.success{background:var(--success)}
+    .toast.info{background:var(--info)}
+    .toast.warning{background:var(--warning)}
+    .toast.error{background:var(--error)}
+
+    /* 下拉选择/搜索框 */
+    .select{position:relative;display:inline-flex}
+    .select .field{width:300px}
+    .dropdown{position:absolute;top:calc(100% + 4px);left:0;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-6);box-shadow:var(--shadow-3);padding:8px;display:none}
+    .dropdown .opt{height:32px;line-height:32px;padding:0 8px;border-radius:6px;cursor:pointer}
+    .dropdown .opt:hover{background:#f5f7fa}
+    .dropdown .opt.selected{background:var(--primary);color:#fff}
+    .dropdown .opt.hover{background:#f0f7ff;color:var(--primary)}
+    .dropdown .opt.disabled{color:var(--muted);cursor:not-allowed}
+    .dropdown .opt.disabled:hover{background:transparent}
+    .dropdown .no-data{padding:10px 12px;color:var(--muted);background:#f5f5f5;border-radius:6px;cursor:default}
+    .select.open .dropdown{display:block}
+
+    /* 双向选择器（Transfer） */
+    .transfer{display:flex;gap:16px}
+    .t-list{width:280px;height:240px;border:1px solid var(--line);border-radius:var(--radius-6);background:var(--surface);padding:8px;overflow:auto}
+    .t-item{display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px}
+    .t-item:hover{background:#f5f7fa}
+    .t-actions{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center}
+
+    /* 时间/日期选择 */
+    .field input[type=time], .field input[type=date]{width:160px}
+
+    /* 弹出框 Modal */
+    .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:999}
+    .modal{width:520px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-8);box-shadow:var(--shadow-3)}
+    .modal .hd{padding:16px;border-bottom:1px solid var(--line);font-weight:600}
+    .modal .bd{padding:16px;color:var(--text-sub)}
+    .modal .ft{padding:12px 16px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+    .modal-mask.show{display:flex}
+
+    /* 骨架屏 */
+    .skeleton{display:flex;gap:12px}
+    .sk{background:linear-gradient(90deg,#eceff3 25%,#f6f8fb 50%,#eceff3 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;text-indent:-9999px;border-radius:6px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* 上传/空状态 */
+    .subtitle{color:var(--text);font-weight:600;margin:8px 0}
+    .upload{border:2px dashed var(--line);border-radius:var(--radius-8);padding:24px;text-align:center;color:var(--muted);background:#fff}
+    .upload-zone{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:140px}
+    .upload-ico{width:44px;height:44px;stroke:var(--muted);fill:none;stroke-width:1.5;margin-bottom:8px}
+    .upload-title{color:var(--text);font-weight:600}
+    .upload-desc{color:var(--muted)}
+    .upload.dragover{border-color:var(--primary);background:#f0f7ff;color:var(--primary)}
+    .upload.dragover .upload-ico{stroke:var(--primary)}
+    .upload-list{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+    .upl-row{display:grid;grid-template-columns:320px 1fr 240px;align-items:center;gap:12px}
+    .upl-left{display:flex;align-items:center;gap:8px;color:var(--text)}
+    .upl-ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .upl-bar{height:6px;background:#eef1f5;border-radius:999px;position:relative;overflow:hidden}
+    .upl-fill{position:absolute;inset:0;left:0;width:0;background:var(--primary)}
+    .upl-status{color:var(--text-sub)}
+    .upl-actions a{margin-left:8px;color:var(--link);cursor:pointer}
+    .upl-row.uploading .upl-fill{width:50%;background:var(--primary)}
+    .upl-row.fail .upl-fill{width:10%;background:var(--error)}
+    .upl-row.done .upl-fill{width:100%;background:var(--success)}
+    .upl-status.success{color:var(--success);display:inline-flex;align-items:center;gap:6px}
+    .status-ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;border:1px dashed var(--line);border-radius:var(--radius-8);color:var(--muted)}
+    .empty-hero{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f5f7fa;color:var(--primary)}
+    .empty-ico{width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .empty-title{font-weight:600;color:var(--text)}
+    .empty-desc{color:var(--text-sub);text-align:center}
+    .empty-actions{display:flex;gap:8px;margin-top:4px}
+    .empty.success .empty-hero{background:#e8fff3;color:var(--success)}
+    .empty.error .empty-hero{background:#fff0f3;color:var(--error)}
+    .empty.warn .empty-hero{background:#fff9e6;color:var(--warning)}
+    .empty.info .empty-hero{background:#e8f3ff;color:var(--primary)}
+
+    /* 结果页（Result） */
+    .result{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+    .result-hero{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e8f3ff;color:var(--primary)}
+    .result-ico{width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .result-title{font-weight:600;color:var(--text);font-size:18px}
+    .result-desc{color:var(--text-sub)}
+    .result-actions{display:flex;gap:8px;margin-top:4px}
+    .result-extra{margin-top:12px;width:100%;max-width:640px;display:grid;grid-template-columns:1fr;gap:12px}
+    .extra-list{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:12px;color:var(--text-sub)}
+    .extra-item{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .copy-btn{color:var(--link);cursor:pointer}
+    .mk-banner{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid #eef1f5;border-radius:8px;background:#f8fbff}
+    .mk-banner .mk-title{color:var(--text);font-weight:600}
+    .result.success .result-hero{background:#edf7ed;color:var(--success)}
+    .result.error .result-hero{background:#fff0f3;color:var(--error)}
+    .result.warn .result-hero{background:#fff9e6;color:var(--warning)}
+    .result.info .result-hero{background:#e8f3ff;color:var(--primary)}
+
+    /* 图表（极简清爽风格重做） */
+    .charts{display:flex;gap:24px;flex-wrap:wrap}
+    .chart-card{background:var(--surface);border:1px solid #eef1f5;border-radius:12px;box-shadow:var(--shadow-1);padding:16px 16px 18px;width:360px}
+    .chart-title{font-weight:600;margin-bottom:12px;color:var(--text);font-size:var(--fz-16)}
+    .chart-box{height:240px;width:100%;background:#fff;border-radius:10px;overflow:hidden}
+    .chart-card:hover{box-shadow:var(--shadow-2)}
+
+    /* 列表（表格）规范样式 */
+    .table-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .table-toolbar .title-left{font-weight:600;color:var(--text);font-size:var(--fz-16)}
+    .table-toolbar .tools{display:flex;align-items:center;gap:8px}
+    .icon-btn{height:28px;width:28px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text-sub);cursor:pointer}
+    .icon-btn:hover{box-shadow:var(--shadow-2)}
+    .table-wrap{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+    table.data-table{width:100%;border-collapse:separate;border-spacing:0}
+    .data-table thead th{background:var(--surface-2);color:var(--text);font-size:14px;font-weight:400;padding:12px;text-align:left;border-bottom:1px solid var(--line)}
+    .data-table tbody td{color:var(--text-sub);font-size:14px;font-weight:500;padding:12px;border-bottom:1px solid var(--line)}
+    .data-table tbody tr:hover td{background:#fafafa}
+    .data-table tbody tr:last-child td{border-bottom:none}
+    .status{display:inline-flex;align-items:center;gap:6px;color:var(--text)}
+    .status .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+    .status.ok .dot{background:var(--success)}
+    .status.maintain .dot{background:var(--primary)}
+    .status.pending .dot{background:var(--muted)}
+    .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--text-sub);background:#f5f5f5}
+    .chip.blue{color:var(--primary);border-color:var(--primary);background:#e8f3ff}
+    .chip.green{color:var(--success);border-color:var(--success);background:#f6ffed}
+    .chip.red{color:var(--error);border-color:var(--error);background:#fff1f0}
+    .chip.yellow{color:var(--warning);border-color:var(--warning);background:#fffbe6}
+    .chip.gray{color:var(--muted);border-color:var(--line);background:#f5f5f5}
+    .actions a{color:var(--link);text-decoration:none;margin-right:8px}
+    .actions a:hover{text-decoration:underline}
+    .pager{display:flex;align-items:center;justify-content:space-between;padding:12px;color:var(--muted)}
+    .pages{display:flex;align-items:center}
+    .pg{height:28px;min-width:28px;padding:0 8px;margin-left:6px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text-sub);cursor:pointer}
+    .pg.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .pg[disabled]{opacity:.5;cursor:not-allowed}
+
+    /* 侧边栏导航规范样式（参考截图：浅色/深色双列演示） */
+    .sidenav-demo-wrap{display:flex;gap:24px;flex-wrap:wrap}
+    .sidenav-demo{width:260px;border:1px solid var(--line);border-radius:0;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-1)}
+    .sidenav-demo.light{background:#fff}
+    .sidenav-demo.dark{background:#1a1e23;border-color:#2a2f36;box-shadow:none}
+    .sn-header{height:60px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--line)}
+    .sidenav-demo.dark .sn-header{border-color:#2a2f36;color:#e6e8eb}
+    .sn-logo{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#13c2c2,#1677ff);box-shadow:0 2px 6px rgba(0,0,0,.12)}
+    .sn-title{font-weight:700;color:var(--text)}
+    .sidenav-demo.dark .sn-title{color:#e6e8eb}
+    .sn-list{padding:8px 0;}
+    .sn-item{display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 16px;color:var(--text-sub);cursor:pointer}
+    .sn-item .left{display:flex;align-items:center;gap:10px}
+    .sn-ico{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center}
+    .sn-icon{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .sidenav-demo.light .sn-item .sn-ico{color:var(--text-sub)}
+    .sidenav-demo.dark .sn-item .sn-ico{color:#c8cdd3}
+    .sn-item.active .sn-ico{color:var(--primary)}
+    .sn-arrow{color:var(--muted)}
+    .sn-arrow-ico,.sn-menu-ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .sn-item:hover{background:#f5f7fa}
+    .sn-item.active{background:#e8f3ff;color:var(--primary)}
+    .sn-item.active .sn-arrow{color:var(--primary)}
+    .sidenav-demo.dark .sn-item{color:#c8cdd3}
+    .sidenav-demo.dark .sn-item:hover{background:#22262c}
+    .sidenav-demo.dark .sn-item.active{background:var(--primary);color:#fff}
+    .sidenav-demo.dark .sn-item.active .sn-arrow{color:#fff}
+    .sn-subtitle{padding:10px 16px;color:var(--muted);font-size:12px}
+    .sidenav-demo.dark .sn-subtitle{color:#9aa3ab}
+    .sn-sublist{padding:0 0 8px}
+    .sn-sublist .sn-item{height:36px;padding-left:36px}
+    .sn-footer{margin-top:auto;height:52px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:flex-start;padding:0 16px;color:var(--muted)}
+    .sidenav-demo.dark .sn-footer{border-color:#2a2f36;color:#9aa3ab}
+
+    /* 数据筛选栏规范样式 */
+    .filter-card{border:1px solid var(--line);background:var(--surface);padding:16px 16px 12px;border-radius:12px;box-shadow:var(--shadow-1)}
+    .filter-title{font-weight:600;color:var(--text);margin-bottom:12px}
+    .filter-desc{color:var(--muted);margin-bottom:12px}
+    .filter-bar{display:flex;flex-direction:column;gap:12px}
+    .filter-grid{display:grid;grid-template-columns:repeat(3,minmax(280px,1fr));gap:16px 24px}
+    .form-item{display:flex;align-items:center;gap:12px}
+    .fi-label{width:84px;color:var(--text-sub);text-align:right}
+    .fi-control{flex:1;height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;display:flex;align-items:center;padding:0 12px;color:var(--text-sub)}
+    .fi-control input{width:100%;height:100%;border:none;outline:none;color:var(--text);}
+    .fi-select-wrap{position:relative;flex:1}
+    select.fi-select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:0 28px 0 12px;color:var(--text-sub);appearance:none;}
+    .chev-ico{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.5;pointer-events:none}
+    .fi-icon{display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+    .fi-date{flex:1;position:relative}
+    .fi-date input{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;padding:0 36px 0 12px;color:var(--text-sub);}
+    .fi-date .fi-cal-ico{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.5}
+    .fi-btn-ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .filter-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+    .collapse-link{color:var(--primary);cursor:pointer}
+    .btn{height:36px;padding:0 14px;border-radius:6px;border:1px solid var(--line);background:#fff;color:var(--text);display:inline-flex;align-items:center;gap:6px}
+    .btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn-default{background:#fff;color:var(--text-sub)}
+    .filter-bar.collapsed .filter-grid .row-2{display:none}
+    .filter-card.square{border-radius:0}
+
+    /* 侧边目录 */
+    .menu{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+    .menu a{display:block;padding:8px 10px;border-radius:6px;color:var(--text-sub);text-decoration:none}
+    .menu a:hover{background:#f0f1f5;color:var(--text)}
+    .menu a.active{background:#e8f3ff;color:var(--primary)}
+    
+    /* 工作台面板规范 */
+    #workbench .wb-hero{display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px dashed var(--line);border-radius:12px;background:linear-gradient(0deg, rgba(22,119,255,.04), rgba(22,119,255,.02));margin-bottom:16px}
+    #workbench .wb-hero .left{display:flex;align-items:center;gap:12px}
+    #workbench .wb-hero .wb-ico{width:28px;height:28px;stroke:var(--primary);fill:none;stroke-width:1.5}
+    #workbench .wb-hero .title{margin:0;font-size:16px;font-weight:600}
+    #workbench .wb-hero .sub{color:var(--muted);font-size:12px}
+    #workbench .wb-hero .help{display:inline-flex;align-items:center;gap:8px;color:var(--link);cursor:pointer}
+
+    #workbench .wb-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+    #workbench .wb-left,#workbench .wb-right{display:flex;flex-direction:column;gap:16px}
+
+    /* 核心数据 */
+    #workbench .metrics{border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:12px}
+    #workbench .metrics-title{font-weight:600;margin-bottom:8px}
+    #workbench .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    #workbench .metric-card{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface-2)}
+    #workbench .metric-ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;color:var(--primary)}
+    #workbench .metric-info{display:flex;flex-direction:column;gap:4px}
+    #workbench .mc-value{font-size:20px;font-weight:600}
+    #workbench .mc-label{color:var(--muted);font-size:12px}
+    #workbench .mc-trend{color:var(--text-sub);font-size:12px}
+
+    /* 快捷入口 */
+    #workbench .quick{border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:12px}
+    #workbench .quick-title{font-weight:600;margin-bottom:8px}
+    #workbench .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    #workbench .quick-item{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;background:var(--surface-2);color:var(--text);cursor:pointer;transition:var(--transition)}
+    #workbench .quick-item:hover{border-color:var(--primary);box-shadow:var(--shadow-2)}
+    #workbench .quick-ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;color:var(--info)}
+    #workbench .quick-name{font-weight:500}
+
+    /* 待办清单 */
+    #workbench .todo{border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:12px}
+    #workbench .todo-title{font-weight:600;margin-bottom:8px}
+    #workbench .todo-list{display:flex;flex-direction:column;gap:8px}
+    #workbench .todo-item{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface-2)}
+    #workbench .todo-check{width:18px;height:18px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+    #workbench .check-ico{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5}
+    #workbench .todo-content{flex:1}
+    #workbench .todo-main{font-weight:500}
+    #workbench .todo-sub{color:var(--muted);font-size:12px}
+    #workbench .todo-actions{display:flex;align-items:center;gap:8px}
+    #workbench .todo-item.done{opacity:.85;border-color:#e5e6eb}
+    #workbench .todo-item.done .todo-main{text-decoration:line-through;color:var(--muted)}
+
+    /* 关注（星标） */
+    #workbench .fav{border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:12px}
+    #workbench .fav-title{font-weight:600;margin-bottom:8px}
+    #workbench .fav-list{display:flex;flex-direction:column;gap:8px}
+    #workbench .fav-item{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface-2)}
+    #workbench .star-btn{display:inline-flex;align-items:center;gap:4px;color:var(--muted);cursor:pointer}
+    #workbench .star-ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+    #workbench .star-btn.active{color:var(--warning)}
+
+    /* 运营模块 Banner */
+    #workbench .ops-banner{border:1px dashed var(--line);border-radius:12px;padding:12px;background:linear-gradient(90deg, rgba(250,173,20,.08), rgba(22,119,255,.08));display:flex;align-items:center;justify-content:space-between}
+    #workbench .ops-left{display:flex;align-items:center;gap:12px}
+    #workbench .ops-ico{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.5;color:var(--warning)}
+    #workbench .ops-title{font-weight:600}
+    #workbench .ops-desc{color:var(--text-sub);font-size:12px}
+
+    /* 工作台 · 图表卡片（销售/在线/区域分布） */
+    #workbench .chart-box{border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:12px}
+    #workbench .chart-title{font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    #workbench .chart-sub{color:var(--muted);font-size:12px}
+    #workbench .chart-body{height:160px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+    #workbench .chart-body svg{width:100%;height:100%}
+
+    /* 加载动效规范 */
+    #loading .loading-grid{display:flex;flex-direction:column;gap:24px}
+    #loading .loading-label{font-weight:600;margin-bottom:8px}
+    #loading .loading-row{display:flex;align-items:center;gap:8px}
+    #loading .loading-ico{width:20px;height:20px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+    #loading .loading-ico.sm{width:16px;height:16px}
+    #loading .loading-ico.lg{width:24px;height:24px}
+    #loading .loading-text{color:var(--link)}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body>
+  <div class="page">
+    <!-- 侧边导航 -->
+    <aside class="sidebar">
+      <h1 style="font-size:24px;margin:0 0 12px">2025年B端组件规范</h1>
+      <p style="color:var(--muted);margin:0 0 16px">优途专注UX/UI领域，联系电话：180-1879-6460</p>
+      <nav>
+        <ul class="menu">
+          <li><a href="#colors" class="active">颜色规范</a></li>
+          <li><a href="#fonts">字体规范</a></li>
+          <li><a href="#spacing">间距规范</a></li>
+          <li><a href="#radius">圆角规范</a></li>
+          <li><a href="#icons">图标尺寸规范</a></li>
+          <li><a href="#buttons">按钮规范</a></li>
+          <li><a href="#alerts">提示类消息规范</a></li>
+          <li><a href="#avatar">默认头像规范</a></li>
+          <li><a href="#tags">标签规范</a></li>
+          <li><a href="#progress">进度条规范</a></li>
+          <li><a href="#steps">步骤条规范</a></li>
+          <li><a href="#switch">开关规范</a></li>
+          <li><a href="#choice">单选/复选框规范</a></li>
+          <li><a href="#slider">滑块规范</a></li>
+          <li><a href="#loading">加载动效规范</a></li>
+          <li><a href="#inputs">输入框规范</a></li>
+          <li><a href="#number">数字输入框/微调器</a></li>
+          <li><a href="#search">搜索框规范</a></li>
+          <li><a href="#select">下拉选择规范</a></li>
+          <li><a href="#transfer">双向选择器规范</a></li>
+          <li><a href="#time">时间选择器规范</a></li>
+          <li><a href="#date">日历选择器规范</a></li>
+          <li><a href="#modal">弹出框规范</a></li>
+          <li><a href="#skeleton">骨架展示规范</a></li>
+          <li><a href="#upload">上传组件规范</a></li>
+          <li><a href="#empty">空状态规范</a></li>
+          <li><a href="#result">结果页规范</a></li>
+          <li><a href="#charts">数据图表规范</a></li>
+          <li><a href="#list">列表规范</a></li>
+          <li><a href="#sidenav">侧边栏导航规范</a></li>
+          <li><a href="#filter">数据筛选栏规范</a></li>
+          <li><a href="#workbench">工作台面板规范</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <header style="margin-bottom:24px">
+        <h1 class="title">2025年B端组件规范（HTML示例页）</h1>
+        <p class="subtitle">宽度固定为 1920px，高度随内容扩展。页面中所有示例均为可运行的原生 HTML/CSS/JS，实现现代主流 B 端组件规范的视觉与交互要点。</p>
+      </header>
+
+      <!-- 颜色规范 -->
+      <section id="colors" class="card">
+        <h2>颜色规范</h2>
+        <p class="desc">主色采用 Ant Design 默认主蓝（#1677ff），同时提供成功/告警/错误/信息等状态色与中性色。建议在大面积背景使用浅灰（#f7f8fa），卡片使用白色并搭配细线与轻阴影。</p>
+        <div class="row">
+          <div class="col">
+            <div style="display:flex;gap:12px;align-items:flex-end">
+              <div style="width:72px;height:72px;background:#1677ff;border-radius:8px"></div>
+              <div style="width:56px;height:56px;background:#3c8cff;border-radius:8px"></div>
+              <div style="width:40px;height:40px;background:#0e5bd3;border-radius:8px"></div>
+            </div>
+            <small style="color:var(--muted)">Primary 主色层级</small>
+          </div>
+          <div class="col">
+            <div style="display:flex;gap:12px">
+              <div style="width:72px;height:48px;background:#52c41a;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#faad14;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#f5222d;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#2f54eb;border-radius:8px"></div>
+            </div>
+            <small style="color:var(--muted)">Success / Warning / Error / Info</small>
+          </div>
+          <div class="col">
+            <div style="display:flex;gap:12px">
+              <div style="width:72px;height:48px;background:#1f2329;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#4e5969;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#86909c;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#e5e6eb;border-radius:8px"></div>
+              <div style="width:72px;height:48px;background:#f7f8fa;border-radius:8px"></div>
+            </div>
+            <small style="color:var(--muted)">中性色：主文案/次文案/说明/分割线/页面背景</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- 工作台面板规范（放在数据筛选栏规范后面） -->
+      <section id="workbench" class="card">
+        <h2>工作台面板规范</h2>
+        <p class="desc">工作台常被作为应用的主页，是一个为用户提供便利的交通枢纽：以中心辐射的方式导航至功能模块，呈现用户当前需要关注的信息，并允许直接处理高频任务。设计目标：用户侧提供处理和查看信息的捷径与帮助；产品侧更好地沟通并适当展示运营内容。</p>
+
+        <!-- 顶部欢迎/帮助（使用帮助） -->
+        <div class="wb-hero">
+          <div class="left">
+            <svg class="wb-ico" viewBox="0 0 24 24"><path d="M4 10l8-6 8 6"/><path d="M5 10v10h14V10"/></svg>
+            <div>
+              <div class="title">欢迎回来，运营同学 👋</div>
+              <div class="sub">工作台是常用信息入口与高频任务的捷径</div>
+            </div>
+          </div>
+          <a class="help" href="#"><svg class="wb-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-2"/><path d="M12 12a3 3 0 1 0-3-3"/></svg>使用帮助</a>
+        </div>
+
+        <div class="wb-grid">
+          <!-- 左侧：核心数据 + 快捷入口 -->
+          <div class="wb-left">
+            <!-- 核心数据 -->
+            <div class="metrics">
+              <div class="metrics-title">核心数据</div>
+              <div class="metric-grid">
+                <div class="metric-card">
+                  <svg class="metric-ico" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M5 7l2 12h10l2-12"/><path d="M9 11h6"/></svg>
+                  <div class="metric-info"><div class="mc-value">128.6万</div><div class="mc-label">GMV 今日累计</div><div class="mc-trend">同比 +12%</div></div>
+                </div>
+                <div class="metric-card">
+                  <svg class="metric-ico" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8"/></svg>
+                  <div class="metric-info"><div class="mc-value">260</div><div class="mc-label">新订单</div><div class="mc-trend">环比 +8%</div></div>
+                </div>
+                <div class="metric-card">
+                  <svg class="metric-ico" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 17l2 3h6l2-3"/></svg>
+                  <div class="metric-info"><div class="mc-value">38</div><div class="mc-label">待发货</div><div class="mc-trend">今日新增 +12</div></div>
+                </div>
+                <div class="metric-card">
+                  <svg class="metric-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                  <div class="metric-info"><div class="mc-value">12</div><div class="mc-label">售后待处理</div><div class="mc-trend">超时 2 条</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 快捷入口 -->
+            <div class="quick">
+              <div class="quick-title">快捷入口</div>
+              <div class="quick-grid">
+                <div class="quick-item" data-name="商品管理"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="6" rx="1"/><rect x="4" y="13" width="16" height="6" rx="1"/></svg><span class="quick-name">商品管理</span></div>
+                <div class="quick-item" data-name="订单管理"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/></svg><span class="quick-name">订单管理</span></div>
+                <div class="quick-item" data-name="店铺设置"><svg class="quick-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M4 12h2"/><path d="M18 12h2"/><path d="M12 4v2"/><path d="M12 18v2"/></svg><span class="quick-name">店铺设置</span></div>
+                <div class="quick-item" data-name="优惠券"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg><span class="quick-name">优惠券</span></div>
+                <div class="quick-item" data-name="物流对账"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 17l2 3h6l2-3"/></svg><span class="quick-name">物流对账</span></div>
+                <div class="quick-item" data-name="数据报表"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="5" y="10" width="3" height="7"/><rect x="10" y="7" width="3" height="10"/><rect x="15" y="4" width="3" height="13"/></svg><span class="quick-name">数据报表</span></div>
+              </div>
+            </div>
+
+            <!-- 销售数据（近7天 GMV 趋势） -->
+            <div class="chart-box" aria-label="销售数据趋势">
+              <div class="chart-title">销售数据 <span class="chart-sub">近7天 GMV 趋势</span></div>
+              <div class="chart-body"><div id="wb-sales" role="img" aria-label="GMV 趋势图" style="width:100%;height:100%"></div></div>
+            </div>
+
+            <!-- 用户同时在线人数（近24小时） -->
+            <div class="chart-box" aria-label="同时在线人数">
+              <div class="chart-title">用户同时在线人数 <span class="chart-sub">近24小时</span></div>
+              <div class="chart-body"><div id="wb-online" role="img" aria-label="在线人数趋势图" style="width:100%;height:100%"></div></div>
+            </div>
+          </div>
+
+          <!-- 右侧：待办清单 + 关注 + 运营模块 -->
+          <div class="wb-right">
+            <!-- 订单分布区域（Top 6） -->
+            <div class="chart-box" aria-label="订单分布区域">
+              <div class="chart-title">订单分布区域 <span class="chart-sub">近7天订单数（Top 6）</span></div>
+              <div class="chart-body"><div id="wb-region" role="img" aria-label="订单区域分布柱状图" style="width:100%;height:100%"></div></div>
+            </div>
+            <div class="todo">
+              <div class="todo-title">待办清单</div>
+              <div class="todo-list">
+                <div class="todo-item">
+                  <div class="todo-check" title="标记完成"><svg class="check-ico" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/></svg></div>
+                  <div class="todo-content"><div class="todo-main">审核新商家入驻</div><div class="todo-sub">2 条待审核 · 今天</div></div>
+                  <div class="todo-actions"><button class="btn sm primary">处理</button><span class="star-btn"><svg class="star-ico" viewBox="0 0 24 24"><path d="M12 4l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z"/></svg>关注</span></div>
+                </div>
+                <div class="todo-item">
+                  <div class="todo-check" title="标记完成"><svg class="check-ico" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/></svg></div>
+                  <div class="todo-content"><div class="todo-main">低库存 SKU 提醒</div><div class="todo-sub">3 个SKU库存不足 · 需补货</div></div>
+                  <div class="todo-actions"><button class="btn sm">补货</button><span class="star-btn"><svg class="star-ico" viewBox="0 0 24 24"><path d="M12 4l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z"/></svg>关注</span></div>
+                </div>
+                <div class="todo-item">
+                  <div class="todo-check" title="标记完成"><svg class="check-ico" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/></svg></div>
+                  <div class="todo-content"><div class="todo-main">待发货订单处理</div><div class="todo-sub">38 单待拣货 · 有超时风险</div></div>
+                  <div class="todo-actions"><button class="btn sm">拣货</button><span class="star-btn"><svg class="star-ico" viewBox="0 0 24 24"><path d="M12 4l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z"/></svg>关注</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fav">
+              <div class="fav-title">关注</div>
+              <div class="fav-list">
+                <div class="fav-item">
+                  <div class="left"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="5" y="10" width="3" height="7"/><rect x="10" y="7" width="3" height="10"/><rect x="15" y="4" width="3" height="13"/></svg> GMV 与目标差距 12%</div>
+                  <span class="star-btn active" title="取消关注"><svg class="star-ico" viewBox="0 0 24 24"><path d="M12 4l3 6 7 1-5 4 2 7-7-4-7 4 2-7-5-4 7-1z"/></svg>已关注</span>
+                </div>
+                <div class="fav-item">
+                  <div class="left"><svg class="quick-ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="6" rx="1"/><rect x="4" y="13" width="16" height="6" rx="1"/></svg> 618 活动方案待审核</div>
+                  <a class="btn sm" href="#result">查看</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="ops-banner">
+              <div class="ops-left">
+                <svg class="ops-ico" viewBox="0 0 24 24"><path d="M3 12h6l9 4V8l-9 4H3z"/><path d="M3 12v6"/></svg>
+                <div>
+                  <div class="ops-title">开启暑期大促</div>
+                  <div class="ops-desc">创建满减/发券，提升下单转化</div>
+                </div>
+              </div>
+              <div class="ops-actions">
+                <button class="btn sm primary">创建活动</button>
+                <button class="btn sm text">发券</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 字体规范 -->
+      <section id="fonts" class="card">
+        <h2>字体规范</h2>
+        <p class="desc">推荐使用系统无衬线字体栈，字号层级：12/14/16/20/24/32。正文建议 14 或 16，标题采用 20/24/32，B 端表格数据可使用 12 提高密度。</p>
+        <div class="col">
+          <div style="font-size:32px;font-weight:700">H1/32px/700 主标题</div>
+          <div style="font-size:24px;font-weight:600">H2/24px/600 模块标题</div>
+          <div style="font-size:20px;font-weight:600">H3/20px/600 分组标题</div>
+          <div style="font-size:16px">正文/16px</div>
+          <div style="font-size:14px;color:var(--text-sub)">说明/14px</div>
+          <div style="font-size:12px;color:var(--muted)">辅助/12px</div>
+        </div>
+      </section>
+
+      <!-- 间距规范 -->
+      <section id="spacing" class="card">
+        <h2>间距规范</h2>
+        <p class="desc">以 4px 为基准的栅格系统：4/8/12/16/24/32/40/48/64。列表/表单的垂直间距推荐 12-16px，卡片内边距推荐 16-24px。</p>
+        <div class="row" style="align-items:flex-end">
+          <div style="width:40px;height:4px;background:#e5e6eb"></div>
+          <div style="width:40px;height:8px;background:#e5e6eb"></div>
+          <div style="width:40px;height:12px;background:#e5e6eb"></div>
+          <div style="width:40px;height:16px;background:#e5e6eb"></div>
+          <div style="width:40px;height:24px;background:#e5e6eb"></div>
+          <div style="width:40px;height:32px;background:#e5e6eb"></div>
+          <div style="width:40px;height:40px;background:#e5e6eb"></div>
+          <div style="width:40px;height:48px;background:#e5e6eb"></div>
+          <div style="width:40px;height:64px;background:#e5e6eb"></div>
+        </div>
+      </section>
+
+      <!-- 圆角规范 -->
+      <section id="radius" class="card">
+        <h2>圆角规范</h2>
+        <p class="desc">小控件/标签 2-6px，输入与按钮 6-8px，卡片与弹层 8-12px。避免过度圆角影响信息密度。</p>
+        <div class="row">
+          <div style="width:140px;height:64px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-2);"></div>
+          <div style="width:140px;height:64px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-6);"></div>
+          <div style="width:140px;height:64px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-8);"></div>
+          <div style="width:140px;height:64px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-12);"></div>
+        </div>
+      </section>
+
+      <!-- 图标尺寸规范 -->
+      <section id="icons" class="card">
+        <h2>图标尺寸规范</h2>
+        <p class="desc">标准图标尺寸为 16/24/32/48px，图标与文字间距推荐 8px。</p>
+        <div class="row">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:16px;height:16px;background:#1677ff"></div><small>16</small></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:24px;height:24px;background:#1677ff"></div><small>24</small></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:32px;height:32px;background:#1677ff"></div><small>32</small></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:48px;height:48px;background:#1677ff"></div><small>48</small></div>
+        </div>
+      </section>
+
+      <!-- 按钮规范 -->
+      <section id="buttons" class="card">
+        <h2>按钮规范</h2>
+        <p class="desc">主次层级明确：Primary（主操作）/Default（次级）/Dashed（弱化）/Text/Link（页面内动作）。禁用态降低不透明度，加载态使用旋转动画。</p>
+        <div class="row">
+          <button class="btn primary">Primary 主操作</button>
+          <button class="btn">Default 次级</button>
+          <button class="btn dashed">Dashed 虚线</button>
+          <button class="btn text">Text 文本</button>
+          <button class="btn link">Link 链接</button>
+          <button class="btn primary" disabled>禁用态</button>
+          <button class="btn primary"><span class="spinner" aria-hidden="true"></span> 加载中</button>
+          <button class="btn sm">小尺寸</button>
+          <button class="btn lg">大尺寸</button>
+          <button class="btn success">成功</button>
+          <button class="btn warning">告警</button>
+          <button class="btn error">危险</button>
+        </div>
+      </section>
+
+      <!-- 提示类消息规范 -->
+      <section id="alerts" class="card">
+        <h2>提示类消息规范</h2>
+        <p class="desc">按截图风格提供两类：通知（紧凑）与通知—banner态（较大内边距）。支持状态色、左侧简约图标、右侧关闭按钮与内联链接。</p>
+        <!-- 通知（紧凑） -->
+        <div style="font-weight:600;color:var(--text-sub);margin-bottom:8px">通知</div>
+        <div class="col">
+          <div class="msg success small">
+            <span class="icon">✔</span>
+            <div class="content">成功提示文字</div>
+            <a class="link" href="javascript:void(0)">文字链接</a>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg error small">
+            <span class="icon">!</span>
+            <div class="content">错误提示文字</div>
+            <a class="link" href="javascript:void(0)">文字链接</a>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg warning small">
+            <span class="icon">⚠</span>
+            <div class="content">告警提示文字</div>
+            <a class="link" href="javascript:void(0)">文字链接</a>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg info small">
+            <span class="icon">ℹ</span>
+            <div class="content">通知提示文字</div>
+            <a class="link" href="javascript:void(0)">文字链接</a>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+        </div>
+
+        <!-- 通知—banner态 -->
+        <div style="font-weight:600;color:var(--text-sub);margin:16px 0 8px">通知 — banner态</div>
+        <div class="col">
+          <div class="msg success banner">
+            <span class="icon">✔</span>
+            <div class="content">成功提示文字</div>
+            <a class="link" href="javascript:void(0)">文字链接</a>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg info banner">
+            <span class="icon">ℹ</span>
+            <div class="content">高品质正在审核，已完成 <strong>13/25</strong>，请耐心等待。</div>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg error banner">
+            <span class="icon">!</span>
+            <div class="content">上传失败，<strong>25</strong> 个商品上传失败。</div>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+          <div class="msg info banner">
+            <span class="icon">ℹ</span>
+            <div class="content">说明类文案：这段示例文案用于展示较长的说明文本在 banner 态中的表现，建议保持清晰分段与适当换行，支持 <a class="link" href="javascript:void(0)">文字链接</a> 引导至操作。</div>
+            <span class="close" aria-label="关闭" onclick="closeMsg(this)">✕</span>
+          </div>
+        </div>
+
+        <!-- 全局 Toast 快捷演示（保留） -->
+        <div style="margin-top:12px" class="row">
+          <button class="btn primary" onclick="showToast('success','操作成功')">全局Success</button>
+          <button class="btn" onclick="showToast('info','这是通知信息')">全局Info</button>
+          <button class="btn warning" onclick="showToast('warning','存在风险提示')">全局Warning</button>
+          <button class="btn error" onclick="showToast('error','发生错误')">全局Error</button>
+        </div>
+      </section>
+
+      <!-- 默认头像规范 -->
+      <section id="avatar" class="card">
+        <h2>默认头像规范</h2>
+        <p class="desc">当无上传头像时，使用首字母占位。支持 24/32/40/56 等尺寸与圆形样式。</p>
+        <div class="row">
+          <div class="avatar sm">A</div>
+          <div class="avatar md">BK</div>
+          <div class="avatar lg">张</div>
+          <div class="avatar xl">运营</div>
+        </div>
+      </section>
+
+      <!-- 标签规范 -->
+      <section id="tags" class="card">
+        <h2>标签规范</h2>
+        <p class="desc">标签用于状态标识与筛选，支持多色语义与可关闭样式。</p>
+        <div class="row">
+          <span class="tag">默认</span>
+          <span class="tag primary">进行中</span>
+          <span class="tag success">已完成</span>
+          <span class="tag warning">待确认</span>
+          <span class="tag error">失败</span>
+        </div>
+      </section>
+
+      <!-- 进度条规范 -->
+      <section id="progress" class="card">
+        <h2>进度条规范</h2>
+        <p class="desc">线形进度条用于展示过程完成度，圆形用于仪表盘式数据。建议显示百分比文本。</p>
+        <div class="row" style="align-items:center">
+          <div class="progress"><div class="bar" style="width:65%"></div><div class="text">65%</div></div>
+          <svg class="c-progress" viewBox="0 0 100 100" aria-label="圆形进度65%">
+            <circle cx="50" cy="50" r="40" stroke="#eef0f4"></circle>
+            <circle cx="50" cy="50" r="40" stroke="#1677ff" stroke-dasharray="251" stroke-dashoffset="88" style="transform:rotate(-90deg);transform-origin:50% 50%"></circle>
+            <text x="50" y="54" text-anchor="middle" font-size="16" fill="#1677ff">65%</text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 步骤条规范 -->
+      <section id="steps" class="card">
+        <h2>步骤条规范</h2>
+        <p class="desc">用于引导多步骤流程，支持“待进行 / 进行中 / 已完成”三种状态。编号、连接线与文案需对齐且信息清晰，参考截图样式如下：</p>
+
+        <div class="steps-demo" aria-label="步骤条示例">
+          <!-- 示例1：第1步进行中，其余待进行 -->
+          <div class="steps-row">
+            <div class="step active">
+              <span class="ico">1</span>
+              <div class="meta"><div class="name">进行中</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">2</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">3</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">4</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+          </div>
+
+          <!-- 示例2：第1步已完成，第2步进行中 -->
+          <div class="steps-row">
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step active">
+              <span class="ico">2</span>
+              <div class="meta"><div class="name">进行中</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">3</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">4</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+          </div>
+
+          <!-- 示例3：前两步已完成，第3步进行中 -->
+          <div class="steps-row">
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step active">
+              <span class="ico">3</span>
+              <div class="meta"><div class="name">进行中</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line"></div>
+            <div class="step waiting">
+              <span class="ico">4</span>
+              <div class="meta"><div class="name">待进行</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+          </div>
+
+          <!-- 示例4：前三步已完成，第4步进行中 -->
+          <div class="steps-row">
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step done">
+              <span class="ico" aria-label="已完成">
+                <svg viewBox="0 0 16 16" role="img" aria-hidden="true"><path d="M6.5 11.2l-2.3-2.3a.8.8 0 10-1.1 1.1l2.9 2.9a.8.8 0 001.1 0l5.9-5.9a.8.8 0 10-1.1-1.1L6.5 11.2z" fill="currentColor"/></svg>
+              </span>
+              <div class="meta"><div class="name">已完成</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+            <div class="line done"></div>
+            <div class="step active">
+              <span class="ico">4</span>
+              <div class="meta"><div class="name">进行中</div><div class="desc">这里是该步骤的描述信息</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 开关规范 -->
+      <section id="switch" class="card">
+        <h2>开关规范</h2>
+        <p class="desc">用于布尔状态切换，默认右侧为开。提供清晰的启闭颜色提示。</p>
+        <div class="row">
+          <div class="switch" onclick="this.classList.toggle('on')"><div class="dot"></div></div>
+          <div class="switch on" onclick="this.classList.toggle('on')"><div class="dot"></div></div>
+        </div>
+      </section>
+
+      <!-- 单选与复选框规范（位于开关规范下面） -->
+      <section id="choice" class="card">
+        <h2>单选和复选框规范</h2>
+        <p class="desc">参考截图设计，包含默认、悬浮、禁用、错误四种状态；复选框额外展示“部分选中（indeterminate）”。控件建议尺寸 16px，颜色遵循主题变量。</p>
+
+        <h3 style="margin-top:4px">单选框</h3>
+        <div class="rc-grid">
+          <div class="rc-row">
+            <div class="label">未选中</div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="radio" class="radio"><small>默认</small></label>
+              <label class="rc-cell is-hover"><input type="radio" class="radio"><small>悬浮</small></label>
+              <label class="rc-cell"><input type="radio" class="radio" disabled><small>禁用</small></label>
+              <label class="rc-cell"><input type="radio" class="radio error"><small>错误</small></label>
+            </div>
+          </div>
+
+          <div class="rc-row">
+            <div class="label">选中</div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="radio" class="radio" checked><small>默认</small></label>
+              <label class="rc-cell is-hover"><input type="radio" class="radio" checked><small>悬浮</small></label>
+              <label class="rc-cell"><input type="radio" class="radio" checked disabled><small>禁用</small></label>
+              <label class="rc-cell"><input type="radio" class="radio error" checked><small>错误</small></label>
+            </div>
+          </div>
+
+          <div class="rc-row">
+            <div class="label"></div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="radio" class="radio" disabled><small>未选中失效项</small></label>
+              <label class="rc-cell"><input type="radio" class="radio" checked disabled><small>已选中失效项</small></label>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:16px">复选框</h3>
+        <div class="rc-grid">
+          <div class="rc-row">
+            <div class="label">未选中</div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="checkbox" class="checkbox"><small>默认</small></label>
+              <label class="rc-cell is-hover"><input type="checkbox" class="checkbox"><small>悬浮</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox" disabled><small>禁用</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox error"><small>错误</small></label>
+            </div>
+          </div>
+
+          <div class="rc-row">
+            <div class="label">选中</div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="checkbox" class="checkbox" checked><small>默认</small></label>
+              <label class="rc-cell is-hover"><input type="checkbox" class="checkbox" checked><small>悬浮</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox" checked disabled><small>禁用</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox error" checked><small>错误</small></label>
+            </div>
+          </div>
+
+          <div class="rc-row">
+            <div class="label">全部选中</div>
+            <div class="rc-cells">
+              <label class="rc-cell"><input type="checkbox" class="checkbox" checked><small>已选中项</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox half"><small>部分选中</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox" disabled><small>未选中失效项</small></label>
+              <label class="rc-cell"><input type="checkbox" class="checkbox" checked disabled><small>已选中失效项</small></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" style="margin-top:12px">
+          <small style="color:var(--muted)">交互说明：
+            悬浮态用于鼠标移入时的醒目提示；禁用态文字与边框降饱和并禁止交互；错误态以红色边框与填充提示；复选框“部分选中”为中划线形态，常用于“全选”关联项部分被选中的场景。
+          </small>
+        </div>
+      </section>
+
+      <!-- 滑块规范 -->
+      <section id="slider" class="card">
+        <h2>滑块规范</h2>
+        <p class="desc">用于连续区间选择，支持显示当前值与刻度。</p>
+        <div class="row slider">
+          <input type="range" min="0" max="100" value="40" oninput="document.getElementById('rangeVal').innerText=this.value"> <span id="rangeVal">40</span>
+        </div>
+      </section>
+
+      <!-- 加载动效规范（放在滑块规范下面） -->
+      <section id="loading" class="card">
+        <h2>加载动效规范</h2>
+        <p class="desc">用于页面或模块数据加载时的反馈。参考截图样式，提供三种常见形态：仅图标、仅文字、图标与文字组合。建议尺寸 16/20/24px；文字使用链接蓝；整体与按钮加载态保持一致。</p>
+        <div class="loading-grid">
+          <div class="loading-block">
+            <div class="loading-label">1. 仅图标加载：</div>
+            <div class="loading-row">
+              <span class="loading-ico" aria-label="loading" role="img"></span>
+            </div>
+          </div>
+
+          <div class="loading-block">
+            <div class="loading-label">2. 仅文字加载：</div>
+            <div class="loading-row">
+              <span class="loading-text">加载中…</span>
+            </div>
+          </div>
+
+          <div class="loading-block">
+            <div class="loading-label">3. 图标和文字加载：</div>
+            <div class="loading-row">
+              <span class="loading-ico" aria-hidden="true"></span>
+              <span class="loading-text">加载中…</span>
+            </div>
+          </div>
+        </div>
+        <div class="col" style="margin-top:12px">
+          <small style="color:var(--muted)">规范建议：用于局部区域（如列表、卡片）加载时选择“图标与文字组合”，用于小按钮或微控件采用“仅图标”，用于纯文本区域采用“仅文字”。避免在同一页面大面积使用，优先使用骨架屏展示结构。</small>
+        </div>
+      </section>
+
+      <!-- 输入框规范 -->
+      <section id="inputs" class="card">
+        <h2>单行输入框规范</h2>
+        <p class="desc">按截图展示七种状态：默认、悬浮、按下、输入、禁用、校验错误、完成。右侧为状态标签。</p>
+        <div class="input-spec">
+          <div class="input-row">
+            <div class="field" style="width:300px"><input type="text" placeholder="please input"></div>
+            <span class="state-label">默认</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-hover" style="width:300px"><input type="text" placeholder="please input"></div>
+            <span class="state-label">悬浮</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-active" style="width:300px"><input type="text" placeholder="please input"></div>
+            <span class="state-label">按下</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-active" style="width:300px"><input type="text" value="please input"></div>
+            <span class="state-label">输入</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-disabled" style="width:300px"><input type="text" placeholder="please input" disabled></div>
+            <span class="state-label">禁用</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-error" style="width:300px"><input type="text" value="please input"></div>
+            <span class="state-label">校验错误</span>
+          </div>
+          <div class="msg-inline">The XXX name "123" already exists.</div>
+          <div class="input-row">
+            <div class="field" style="width:300px"><input type="text" value="complete"></div>
+            <span class="state-label">完成</span>
+          </div>
+        </div>
+
+        <h2 style="margin-top:24px">多行输入框规范</h2>
+        <p class="desc">按截图展示：默认、悬浮、按下、输入、禁用、校验错误；右下角显示字符计数（最大 1000）。</p>
+        <div class="row textarea-grid" style="margin-top:12px">
+          <div class="ta" style="width:420px">
+            <div class="ta-label">默认</div>
+            <div class="field ta-field"><textarea placeholder="please input" maxlength="1000" data-count="ta-c-1" oninput="updateTaCount(this)"></textarea></div>
+            <div class="ta-count" id="ta-c-1">0/1000</div>
+          </div>
+
+          <div class="ta" style="width:420px">
+            <div class="ta-label">悬浮</div>
+            <div class="field ta-field is-hover"><textarea placeholder="please input" maxlength="1000" data-count="ta-c-2" oninput="updateTaCount(this)"></textarea></div>
+            <div class="ta-count" id="ta-c-2">0/1000</div>
+          </div>
+
+          <div class="ta" style="width:420px">
+            <div class="ta-label">按下</div>
+            <div class="field ta-field is-active"><textarea placeholder="please input" maxlength="1000" data-count="ta-c-3" oninput="updateTaCount(this)"></textarea></div>
+            <div class="ta-count" id="ta-c-3">0/1000</div>
+          </div>
+
+          <div class="ta" style="width:420px">
+            <div class="ta-label">输入</div>
+            <div class="field ta-field is-active"><textarea maxlength="1000" data-count="ta-c-4" oninput="updateTaCount(this)">test</textarea></div>
+            <div class="ta-count" id="ta-c-4">4/1000</div>
+          </div>
+
+          <div class="ta" style="width:420px">
+            <div class="ta-label">禁用</div>
+            <div class="field ta-field is-disabled"><textarea placeholder="please input" disabled maxlength="1000" data-count="ta-c-5"></textarea></div>
+            <div class="ta-count" id="ta-c-5">0/1000</div>
+          </div>
+
+          <div class="ta" style="width:420px">
+            <div class="ta-label">校验错误</div>
+            <div class="field ta-field is-error"><textarea maxlength="1000" data-count="ta-c-6" oninput="updateTaCount(this)">1234567</textarea></div>
+            <div class="ta-count" id="ta-c-6">7/1000</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 数字输入 / 微调器 -->
+      <section id="number" class="card">
+        <h2>数字输入框与微调器</h2>
+        <p class="desc">用于小数或整数录入，支持上下调整按钮与步进规则。</p>
+        <div class="row">
+          <div class="number"><input id="numInput" type="number" value="10" step="1"><button class="btn" onclick="document.getElementById('numInput').stepDown()">-</button><button class="btn" onclick="document.getElementById('numInput').stepUp()">+</button></div>
+          <div class="stepper"><button onclick="step(-1)">-</button><input id="stepVal" type="text" value="5" style="width:80px;text-align:center"><button onclick="step(1)">+</button></div>
+        </div>
+      </section>
+
+      <!-- 搜索框规范 -->
+      <section id="search" class="card">
+        <h2>搜索框规范</h2>
+        <p class="desc">按截图展示六种状态：默认、悬浮、按下、输入、禁用、完成。放大镜为右侧后缀图标。</p>
+        <div class="input-spec">
+          <div class="input-row">
+            <div class="field" style="width:300px">
+              <input type="text" placeholder="请输入内容">
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">默认</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-hover" style="width:300px">
+              <input type="text" placeholder="请输入内容">
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">悬浮</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-active" style="width:300px">
+              <input type="text" placeholder="请输入内容">
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">按下</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-active" style="width:300px">
+              <input type="text" value="输入的内容">
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">输入</span>
+          </div>
+          <div class="input-row">
+            <div class="field is-disabled" style="width:300px">
+              <input type="text" placeholder="请输入内容" disabled>
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">禁用</span>
+          </div>
+          <div class="input-row">
+            <div class="field" style="width:300px">
+              <input type="text" value="输入的内容">
+              <span class="suffix"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            </div>
+            <span class="state-label">完成</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 下拉选择规范 -->
+      <section id="select" class="card">
+        <h2>下拉选择规范</h2>
+        <p class="desc">展示与截图一致的五种状态：默认、悬浮、展开、下拉无选项、禁用。选项高度 32px，箭头位于右侧后缀。</p>
+        <div class="row" style="flex-direction:column;gap:12px">
+          <!-- 默认 -->
+          <div class="input-row">
+            <div class="select" id="selDefault">
+              <div class="field" style="width:300px">
+                <input type="text" value="Selected" readonly>
+                <span class="suffix">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </div>
+            </div>
+            <span class="state-label">默认</span>
+          </div>
+
+          <!-- 悬浮 -->
+          <div class="input-row">
+            <div class="select" id="selHover">
+              <div class="field is-hover" style="width:300px">
+                <input type="text" value="Selected" readonly>
+                <span class="suffix">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </div>
+            </div>
+            <span class="state-label">悬浮</span>
+          </div>
+
+          <!-- 展开（选中项 + Hover 项 + 禁用项） -->
+          <div class="input-row">
+            <div class="select open" id="selOpen">
+              <div class="field is-active" style="width:300px" onclick="toggleSelect('selOpen')">
+                <input type="text" value="Selected" readonly>
+                <span class="suffix">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </div>
+              <div class="dropdown">
+                <div class="opt" onclick="chooseOpt('selOpen','Default',this)">Default</div>
+                <div class="opt selected" onclick="chooseOpt('selOpen','Selected',this)">Selected</div>
+                <div class="opt" onclick="chooseOpt('selOpen','Default',this)">Default</div>
+                <div class="opt hover">Hover</div>
+                <div class="opt disabled">disabled</div>
+              </div>
+            </div>
+            <span class="state-label">展开</span>
+          </div>
+
+          <!-- 下拉无选项 -->
+          <div class="input-row">
+            <div class="select open" id="selEmpty">
+              <div class="field is-active" style="width:300px" onclick="toggleSelect('selEmpty')">
+                <input type="text" value="Selected" readonly>
+                <span class="suffix">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </div>
+              <div class="dropdown">
+                <div class="no-data">No data to display</div>
+              </div>
+            </div>
+            <span class="state-label">下拉无选项</span>
+          </div>
+
+          <!-- 禁用 -->
+          <div class="input-row">
+            <div class="select" id="selDisabled">
+              <div class="field is-disabled" style="width:300px">
+                <input type="text" value="Selected" readonly disabled>
+                <span class="suffix">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </div>
+            </div>
+            <span class="state-label">禁用</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 双向选择器规范 -->
+      <section id="transfer" class="card">
+        <h2>双向选择器（Transfer）</h2>
+        <p class="desc">用于在两个列表间移动条目，适合权限、成员或标签选择。</p>
+        <div class="transfer" id="transferBox">
+          <div class="t-list" id="leftList"></div>
+          <div class="t-actions">
+            <button class="btn" onclick="moveSelected('left','right')"> &gt; </button>
+            <button class="btn" onclick="moveSelected('right','left')"> &lt; </button>
+          </div>
+          <div class="t-list" id="rightList"></div>
+        </div>
+      </section>
+
+      <!-- 时间/日历选择器规范 -->
+      <section id="time" class="card">
+        <h2>时间选择器</h2>
+        <p class="desc">用于选择时分，24 小时制。建议与日期选择搭配使用。</p>
+        <div class="row"><div class="field"><input type="time" value="09:30"></div></div>
+      </section>
+
+      <section id="date" class="card">
+        <h2>日历选择器</h2>
+        <p class="desc">日期选择器通过原生 input[type=date] 展示基础样式，实际项目可替换为更完整的日历组件。</p>
+        <div class="row"><div class="field"><input type="date" value="2025-10-01"></div></div>
+      </section>
+
+      <!-- 弹窗规范 -->
+      <section id="modal" class="card">
+        <h2>弹出框（Modal）</h2>
+        <p class="desc">模态框用于二次确认与复杂表单。标题清晰、内容简洁，底部放置主要与次要按钮。</p>
+        <div class="row"><button class="btn primary" onclick="openModal()">打开弹窗</button></div>
+        <div class="modal-mask" id="modalMask" role="dialog" aria-modal="true">
+          <div class="modal">
+            <div class="hd">删除项目</div>
+            <div class="bd">确定要删除当前项目吗？此操作不可撤销。</div>
+            <div class="ft"><button class="btn" onclick="closeModal()">取消</button><button class="btn error" onclick="confirmModal()">删除</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 骨架屏规范 -->
+      <section id="skeleton" class="card">
+        <h2>骨架展示（Skeleton）</h2>
+        <p class="desc">在数据加载期间展示占位，避免空白闪烁。支持头像/标题/文本组合。</p>
+        <div class="skeleton">
+          <div class="sk" style="width:56px;height:56px;border-radius:var(--round)"></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="sk" style="width:220px;height:16px"></div>
+            <div class="sk" style="width:320px;height:12px"></div>
+            <div class="sk" style="width:280px;height:12px"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 上传组件规范 -->
+      <section id="upload" class="card">
+        <h2>上传组件</h2>
+        <p class="desc">支持单个或批量上传；拖拽或点击选择文件。建议限制文件类型与体积，并在失败时提供重试入口。</p>
+        <div class="subtitle">默认状态：</div>
+        <div class="upload" id="uploadArea">
+          <div class="upload-zone">
+            <svg class="upload-ico" viewBox="0 0 24 24"><path d="M12 16V4"></path><path d="M8 8l4-4 4 4"></path><rect x="3" y="16" width="18" height="4" rx="2"></rect></svg>
+            <div class="upload-title">点击或拖动文件上传</div>
+            <div class="upload-desc">支持单个或批量上传，严禁上传包含色情、暴力、反动等相关违法信息的文件。</div>
+            <div>
+              <button class="btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+              <input id="fileInput" type="file" multiple style="display:none" onchange="listFiles(this.files)">
+            </div>
+          </div>
+          <div id="fileList" class="upload-list" aria-label="上传状态列表"></div>
+        </div>
+
+        <div class="subtitle" style="margin-top:16px">上传状态：</div>
+        <div class="upload-list">
+          <div class="upl-row uploading">
+            <div class="upl-left">
+              <svg class="upl-ico" viewBox="0 0 24 24"><path d="M3 7h18"></path><path d="M3 12h18"></path><path d="M3 17h18"></path></svg>
+              <span>文件名称1.rar</span>
+            </div>
+            <div class="upl-bar"><div class="upl-fill"></div></div>
+            <div class="upl-actions"><span class="upl-status">正在上传 50%</span><a>暂停</a><a>取消</a></div>
+          </div>
+
+          <div class="upl-row fail">
+            <div class="upl-left">
+              <svg class="upl-ico" viewBox="0 0 24 24"><path d="M3 7h18"></path><path d="M3 12h18"></path><path d="M3 17h18"></path></svg>
+              <span>文件名称2.rar</span>
+            </div>
+            <div class="upl-bar"><div class="upl-fill"></div></div>
+            <div class="upl-actions"><span class="upl-status" style="color:var(--error)">上传失败</span><a>重传</a><a>取消</a></div>
+          </div>
+
+          <div class="upl-row done">
+            <div class="upl-left">
+              <svg class="upl-ico" viewBox="0 0 24 24"><path d="M3 7h18"></path><path d="M3 12h18"></path><path d="M3 17h18"></path></svg>
+              <span>文件名称3.rar</span>
+            </div>
+            <div class="upl-bar"><div class="upl-fill"></div></div>
+            <div class="upl-actions"><span class="upl-status success"><svg class="status-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg>上传成功</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 空状态规范 -->
+      <section id="empty" class="card">
+        <h2>空状态规范</h2>
+        <p class="desc">任何内容区域（页面、区块、组件、单数据）没有内容/数据显示给用户时，出现空状态。目标是：解释原因，给出建议操作，引导用户摆脱空状态，或在“已完成/已清空”场景下简洁提示即可。</p>
+
+        <ul style="color:var(--text-sub);margin:8px 0 16px 18px;line-height:1.8">
+          <li>原因说明：使用清晰语言或简短插图，告知“为何没有数据”。</li>
+          <li>建议操作：提供创建、导入、修改筛选、重试、申请权限等路径。</li>
+          <li>语气与文案：友好、简明，避免让用户焦虑；动作型按钮文案更直接。</li>
+          <li>不同场景：无数据、筛选无结果、已完成/已清空、加载失败、权限受限等。</li>
+          <li>视觉：图标使用统一线性 SVG；注意轻量化，不喧宾夺主；与主题色匹配。</li>
+        </ul>
+
+        <div class="row">
+          <div class="col">
+            <div class="empty info" role="status" aria-live="polite">
+              <div class="empty-hero">
+                <svg class="empty-ico" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"></rect><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h6"></path></svg>
+              </div>
+              <div class="empty-title">暂无数据</div>
+              <div class="empty-desc">你还没有创建任何记录，可通过“创建”或“导入”开始使用。</div>
+              <div class="empty-actions">
+                <button class="btn primary">创建记录</button>
+                <button class="btn">导入 CSV</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="empty warn">
+              <div class="empty-hero">
+                <svg class="empty-ico" viewBox="0 0 24 24"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path><path d="M8 12l3 3 5-5"></path></svg>
+              </div>
+              <div class="empty-title">筛选条件下无结果</div>
+              <div class="empty-desc">当前筛选过于严格，未命中任何数据。你可以尝试放宽筛选。</div>
+              <div class="empty-actions">
+                <button class="btn">重置筛选</button>
+                <button class="btn">调整条件</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:16px">
+          <div class="col">
+            <div class="empty success">
+              <div class="empty-hero">
+                <svg class="empty-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg>
+              </div>
+              <div class="empty-title">全部完成</div>
+              <div class="empty-desc">你已处理完所有任务，目前无需操作。保持当前清爽状态即可。</div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="empty error" role="alert">
+              <div class="empty-hero">
+                <svg class="empty-ico" viewBox="0 0 24 24"><path d="M3 6l9 6 9-6"></path><path d="M3 18l9-6 9 6"></path><path d="M12 8v8"></path></svg>
+              </div>
+              <div class="empty-title">数据加载失败</div>
+              <div class="empty-desc">网络异常或服务不可用，请稍后重试。如果持续失败，请联系管理员。</div>
+              <div class="empty-actions">
+                <button class="btn primary">重试</button>
+                <button class="btn">联系管理员</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:16px">
+          <div class="col">
+            <div class="empty error">
+              <div class="empty-hero">
+                <svg class="empty-ico" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M9 9v6"></path><path d="M15 9v6"></path></svg>
+              </div>
+              <div class="empty-title">权限受限</div>
+              <div class="empty-desc">你暂无访问该模块的权限，可发起申请或联系管理员开通。</div>
+              <div class="empty-actions">
+                <button class="btn primary">申请权限</button>
+                <button class="btn">返回首页</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 结果页规范 -->
+      <section id="result" class="card">
+        <h2>结果页规范</h2>
+        <p class="desc">结果页用于在完成一个流程后向用户明确反馈结果，并引导后续操作。标题建议采用“对象+动作+结果/状态”或“动作+结果/状态”。结果页可包含：结果反馈、结果解释（可选）、建议操作、补充信息（可选）与营销模块。</p>
+
+        <div class="row">
+          <div class="col">
+            <div class="result success" role="status" aria-live="polite">
+              <div class="result-hero">
+                <svg class="result-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg>
+              </div>
+              <div class="result-title">提交成功</div>
+              <div class="result-desc">您的表单已提交，我们将在 10 分钟内完成处理。</div>
+              <div class="result-actions">
+                <button class="btn primary">返回列表</button>
+                <button class="btn">查看详情</button>
+              </div>
+              <div class="result-extra">
+                <div class="extra-list">
+                  <div class="extra-item"><span>单号</span><span><code id="orderNo">A2025-00098</code> <a class="copy-btn" data-copy="A2025-00098">复制</a></span></div>
+                  <div class="extra-item"><span>提交时间</span><span>2025-11-04 10:26</span></div>
+                </div>
+                <div class="mk-banner">
+                  <div class="mk-title">营销推荐：开通“结果通知”服务，实时推送处理进度</div>
+                  <button class="btn primary sm">立即开通</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="result error" role="alert">
+              <div class="result-hero">
+                <svg class="result-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg>
+              </div>
+              <div class="result-title">提交失败</div>
+              <div class="result-desc">服务器暂时不可用，请稍后重试或联系管理员。</div>
+              <div class="result-actions">
+                <button class="btn primary">重新提交</button>
+                <button class="btn">返回上一页</button>
+              </div>
+              <div class="result-extra">
+                <div class="extra-list">
+                  <div class="extra-item"><span>错误码</span><span><code>ERR-503</code></span></div>
+                  <div class="extra-item"><span>说明</span><span>服务不可用或超时，请检查网络或稍后再试。</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 数据图表规范 -->
+      <section id="charts" class="card">
+        <h2>数据图表</h2>
+        <p class="desc">按截图的配色与样式示例化 8 种图：漏斗、饼图、环形图、雷达、柱状、折线、气泡散点、百分比堆叠面积图。所有图表使用 ECharts 渲染，网格线与标签颜色统一规范。</p>
+        <div class="charts">
+          <div class="chart-card"><div class="chart-title">漏斗图</div><div class="chart-box" id="chart-funnel"></div></div>
+          <div class="chart-card"><div class="chart-title">渠道饼图</div><div class="chart-box" id="chart-pie"></div></div>
+          <div class="chart-card"><div class="chart-title">渠道环形图</div><div class="chart-box" id="chart-donut"></div></div>
+          <div class="chart-card"><div class="chart-title">雷达图</div><div class="chart-box" id="chart-radar"></div></div>
+          <div class="chart-card"><div class="chart-title">柱状图</div><div class="chart-box" id="chart-bar"></div></div>
+          <div class="chart-card"><div class="chart-title">折线图</div><div class="chart-box" id="chart-line"></div></div>
+          <div class="chart-card"><div class="chart-title">气泡散点图</div><div class="chart-box" id="chart-bubble"></div></div>
+          <div class="chart-card"><div class="chart-title">百分比堆叠面积图</div><div class="chart-box" id="chart-area"></div></div>
+        </div>
+      </section>
+
+      <!-- 列表规范（表格） -->
+      <section id="list" class="card">
+        <h2>列表规范</h2>
+        <p class="desc">参考截图样式，采用极简白卡+细线分隔，12px 标签、状态点与操作链接统一风格。</p>
+        <div class="table-toolbar">
+          <div class="title-left">高级标题</div>
+          <div class="tools">
+            <button class="icon-btn" title="刷新">⟲</button>
+            <button class="icon-btn" title="列设置">≡</button>
+            <button class="icon-btn" title="更多">⋯</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" role="table" aria-label="列表规范示例">
+            <thead>
+              <tr>
+                <th style="width:72px">序号</th>
+                <th style="width:160px">功能名称</th>
+                <th style="width:140px">状态</th>
+                <th style="width:140px">标签</th>
+                <th style="width:180px">使用量</th>
+                <th style="width:220px">创建时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>市场</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip blue">蓝色</span></td>
+                <td>1,000,000</td>
+                <td>2015-12-24 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+              <tr>
+                <td>2</td><td>组件</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip gray">默认</span></td>
+                <td>3,000,000</td>
+                <td>2015-12-20 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+              <tr>
+                <td>3</td><td>图标</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip green">绿色</span></td>
+                <td>4,000,000</td>
+                <td>2015-12-20 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+              <tr>
+                <td>4</td><td>智能助理</td>
+                <td><span class="status pending"><span class="dot"></span>待下线</span></td>
+                <td><span class="chip red">红色</span></td>
+                <td>10,000</td>
+                <td>2019-12-08 00:00:00</td>
+                <td class="actions"><a>下线</a></td>
+              </tr>
+              <tr>
+                <td>5</td><td>智能表格</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip green">绿色</span></td>
+                <td>1,000,000</td>
+                <td>2020-12-08 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+              <tr>
+                <td>6</td><td>智能栅格</td>
+                <td><span class="status maintain"><span class="dot"></span>维护中</span></td>
+                <td><span class="chip yellow">黄色</span></td>
+                <td>10,000</td>
+                <td>2020-12-08 00:00:00</td>
+                <td class="actions"><a>更新状态</a></td>
+              </tr>
+              <tr>
+                <td>7</td><td>图片</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip green">绿色</span></td>
+                <td>10,000</td>
+                <td>2018-12-08 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+              <tr>
+                <td>8</td><td>布局</td>
+                <td><span class="status maintain"><span class="dot"></span>维护中</span></td>
+                <td><span class="chip red">红色</span></td>
+                <td>1,000,000</td>
+                <td>2020-12-08 00:00:00</td>
+                <td class="actions"><a>更新状态</a></td>
+              </tr>
+              <tr>
+                <td>9</td><td>标注</td>
+                <td><span class="status maintain"><span class="dot"></span>维护中</span></td>
+                <td><span class="chip green">绿色</span></td>
+                <td>1,000,000</td>
+                <td>2020-08-08 00:00:00</td>
+                <td class="actions"><a>更新状态</a></td>
+              </tr>
+              <tr>
+                <td>10</td><td>智能填充</td>
+                <td><span class="status ok"><span class="dot"></span>正常迭代</span></td>
+                <td><span class="chip blue">蓝色</span></td>
+                <td>1,000,000</td>
+                <td>2020-12-08 00:00:00</td>
+                <td class="actions"><a>创建迭代</a><a>删除</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pager">
+            <div class="info">第 1-10 条 / 总共 10 条</div>
+            <div class="pages"><button class="pg" disabled>‹</button><button class="pg active">1</button><button class="pg" disabled>›</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 侧边栏导航规范（参考截图：浅色/深色） -->
+      <section id="sidenav" class="card">
+        <h2>侧边栏导航规范</h2>
+        <p class="desc">主导航与分组导航统一：高度 40px，左侧图标 18px，文字 14px；选中项使用主蓝高亮，浅色下为淡蓝底+主蓝字，深色下为主蓝底+白字。分组标题使用 12px 次级文案色。</p>
+        <div class="sidenav-demo-wrap">
+          <!-- 浅色侧边栏 -->
+          <aside class="sidenav-demo light" aria-label="浅色侧边导航示例">
+            <div class="sn-header">
+              <div class="sn-logo" aria-hidden="true"></div>
+              <div class="sn-title">TDesign Starter</div>
+            </div>
+            <div class="sn-subtitle">主导航</div>
+            <nav class="sn-list">
+              <div class="sn-item">
+                <div class="left"><span class="sn-ico" aria-hidden="true"><svg class="sn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></span><span>仪表盘</span></div>
+                <span class="sn-arrow"><svg class="sn-arrow-ico" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+              </div>
+            </nav>
+            <div class="sn-subtitle">组件</div>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.5"></circle><line x1="9" y1="6" x2="21" y2="6"></line><circle cx="5" cy="12" r="1.5"></circle><line x1="9" y1="12" x2="21" y2="12"></line><circle cx="5" cy="18" r="1.5"></circle><line x1="9" y1="18" x2="21" y2="18"></line></svg></span><span>列表页</span></div><span class="sn-arrow"><svg class="sn-arrow-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+              <div class="sn-item active"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.5"></circle><line x1="9" y1="6" x2="21" y2="6"></line><circle cx="5" cy="12" r="1.5"></circle><line x1="9" y1="12" x2="21" y2="12"></line><circle cx="5" cy="18" r="1.5"></circle><line x1="9" y1="18" x2="21" y2="18"></line></svg></span><span>基础列表页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="5" rx="1"></rect><rect x="3" y="14" width="7" height="5" rx="1"></rect><rect x="14" y="5" width="7" height="5" rx="1"></rect><rect x="14" y="14" width="7" height="5" rx="1"></rect></svg></span><span>卡片列表页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.5"></circle><line x1="9" y1="6" x2="21" y2="6"></line><path d="M9 12h12"/><path d="M9 18h8"/></svg></span><span>筛选列表页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M4 12h8"/><path d="M8 8l-4 4 4 4"/><path d="M12 6h8"/><path d="M16 2l-4 4 4 4"/></svg></span><span>树状筛选列表页</span></div></div>
+            </nav>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M4 20l4-1 10-10-3-3L5 16l-1 4z"></path><path d="M14 6l3 3"></path></svg></span><span>表单页</span></div><span class="sn-arrow">▾</span></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5"></path></svg></span><span>详情页</span></div><span class="sn-arrow">▸</span></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg></span><span>结果页</span></div><span class="sn-arrow">▸</span></div>
+            </nav>
+            <div class="sn-subtitle">更多</div>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M4 20c2-4 14-4 16 0"/></svg></span><span>个人页</span></div><span class="sn-arrow">▸</span></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M14 3h6v18h-6"></path><path d="M10 12h8"></path><path d="M14 12l-3-3M14 12l-3 3"></path></svg></span><span>登录页</span></div><span class="sn-arrow">▸</span></div>
+            </nav>
+            <div class="sn-footer"><svg class="sn-menu-ico" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></div>
+          </aside>
+
+          <!-- 深色侧边栏 -->
+          <aside class="sidenav-demo dark" aria-label="深色侧边导航示例">
+            <div class="sn-header">
+              <div class="sn-logo" aria-hidden="true"></div>
+              <div class="sn-title">TDesign Starter</div>
+            </div>
+            <div class="sn-subtitle">主导航</div>
+            <nav class="sn-list">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></span><span>仪表盘</span></div><span class="sn-arrow"><svg class="sn-arrow-ico" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></div>
+            </nav>
+            <div class="sn-subtitle">组件</div>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.5"></circle><line x1="9" y1="6" x2="21" y2="6"></line><circle cx="5" cy="12" r="1.5"></circle><line x1="9" y1="12" x2="21" y2="12"></line><circle cx="5" cy="18" r="1.5"></circle><line x1="9" y1="18" x2="21" y2="18"></line></svg></span><span>列表页</span></div><span class="sn-arrow"><svg class="sn-arrow-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+              <div class="sn-item active"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5"></path></svg></span><span>基础详情页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="5" rx="1"></rect><rect x="3" y="14" width="7" height="5" rx="1"></rect><rect x="14" y="5" width="7" height="5" rx="1"></rect><rect x="14" y="14" width="7" height="5" rx="1"></rect></svg></span><span>多卡片详情页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></span><span>数据详情页</span></div></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5"></path></svg></span><span>二级详情页</span></div></div>
+            </nav>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg></span><span>结果页</span></div><span class="sn-arrow">▾</span></div>
+            </nav>
+            <div class="sn-subtitle">更多</div>
+            <nav class="sn-sublist">
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M4 20c2-4 14-4 16 0"/></svg></span><span>个人页</span></div><span class="sn-arrow">▸</span></div>
+              <div class="sn-item"><div class="left"><span class="sn-ico"><svg class="sn-icon" viewBox="0 0 24 24"><path d="M14 3h6v18h-6"></path><path d="M10 12h8"></path><path d="M14 12l-3-3M14 12l-3 3"></path></svg></span><span>登录页</span></div><span class="sn-arrow">▸</span></div>
+            </nav>
+            <div class="sn-footer"><svg class="sn-menu-ico" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 数据筛选栏规范 -->
+      <section id="filter" class="card">
+        <h2>数据筛选栏规范</h2>
+        <p class="desc">为表格列表提供的高级筛选区域：字段高度 36px，标签右对齐 84px；栅格按 3 列排列，支持收起/展开二行。主按钮为主蓝，重置为灰色描边按钮。</p>
+        <div class="filter-card">
+          <div class="filter-title">高级筛选栏</div>
+          <div class="filter-bar">
+            <div class="filter-grid">
+              <div class="form-item">
+                <div class="fi-label">会员账号：</div>
+                <div class="fi-control"><input type="text" placeholder="输入会员账号/ID/手机号码"/></div>
+              </div>
+              <div class="form-item">
+                <div class="fi-label">会员类型：</div>
+                <div class="fi-select-wrap">
+                  <select class="fi-select">
+                    <option>选择会员类型</option>
+                  </select>
+                  <svg class="chev-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div class="form-item">
+                <div class="fi-label">注册日期：</div>
+                <div class="fi-date">
+                  <input type="text" placeholder="选择日期范围"/>
+                  <svg class="fi-cal-ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M3 9h18"></path></svg>
+                </div>
+              </div>
+
+              <div class="form-item row-2">
+                <div class="fi-label">注册来源：</div>
+                <div class="fi-select-wrap">
+                  <select class="fi-select">
+                    <option>选择注册来源</option>
+                  </select>
+                  <svg class="chev-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div class="form-item row-2">
+                <div class="fi-label">会员标签：</div>
+                <div class="fi-select-wrap">
+                  <select class="fi-select">
+                    <option>选择会员标签</option>
+                  </select>
+                  <svg class="chev-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div class="form-item row-2">
+                <div class="fi-label">会员状态：</div>
+                <div class="fi-select-wrap">
+                  <select class="fi-select">
+                    <option>选择会员状态</option>
+                  </select>
+                  <svg class="chev-ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="filter-actions">
+              <a href="#" class="collapse-link" aria-label="切换筛选收起展开">收起搜索</a>
+              <button class="btn btn-primary" type="button" aria-label="查询"><svg class="fi-btn-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M17 17l4 4"></path></svg>查询</button>
+              <button class="btn btn-default" type="button" aria-label="重置"><svg class="fi-btn-ico" viewBox="0 0 24 24"><path d="M12 5a7 7 0 1 1-6.5 4.5"></path><path d="M5 5v4h4"></path></svg>重置</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 全局消息容器 -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <!-- ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+  <script>
+    // 目录高亮（简易）
+    document.querySelectorAll('.menu a').forEach(a=>{
+      a.addEventListener('click',()=>{
+        document.querySelectorAll('.menu a').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+      });
+    });
+
+    // Toast
+    function showToast(type, text){
+      const wrap = document.getElementById('toastWrap');
+      const node = document.createElement('div');
+      node.className = 'toast '+type;
+      node.textContent = text;
+      wrap.appendChild(node);
+      setTimeout(()=>{node.style.opacity='0'; node.style.transform='translateY(-6px)';}, 1800);
+      setTimeout(()=>{wrap.removeChild(node);}, 2300);
+    }
+
+    // 选择器
+    function toggleSelect(id){
+      document.getElementById(id).classList.toggle('open');
+    }
+    function chooseOpt(id,val,node){
+      const el = document.getElementById(id);
+      const input = el.querySelector('input');
+      if(input) input.value = val;
+      // 高亮选中项
+      try{
+        const opts = el.querySelectorAll('.dropdown .opt');
+        opts.forEach(o=>o.classList.remove('selected'));
+        if(node && !node.classList.contains('disabled')){ node.classList.add('selected'); }
+      }catch(e){}
+      el.classList.remove('open');
+    }
+
+    // 微调器
+    function step(delta){
+      const input = document.getElementById('stepVal');
+      let v = Number(input.value)||0; v += delta; input.value = v;
+    }
+
+    // 双向选择器示例数据
+    const leftData = ['张三','李四','王五','产品经理','测试工程师','UI设计师'];
+    const rightData = ['运营专员'];
+    function renderTransfer(){
+      const left = document.getElementById('leftList');
+      const right = document.getElementById('rightList');
+      left.innerHTML = leftData.map((t,i)=>`<label class="t-item"><input type="checkbox" data-side="left" data-index="${i}"> ${t}</label>`).join('');
+      right.innerHTML = rightData.map((t,i)=>`<label class="t-item"><input type="checkbox" data-side="right" data-index="${i}"> ${t}</label>`).join('');
+    }
+    function moveSelected(from,to){
+      const fromData = from==='left'?leftData:rightData;
+      const toData = to==='left'?leftData:rightData;
+      const parent = document.getElementById(from==='left'?'leftList':'rightList');
+      const checks = parent.querySelectorAll('input[type=checkbox]:checked');
+      const indices = Array.from(checks).map(x=>Number(x.dataset.index));
+      // 从后往前移避免索引错位
+      indices.sort((a,b)=>b-a).forEach(i=>{ toData.push(fromData[i]); fromData.splice(i,1); });
+      renderTransfer();
+    }
+    renderTransfer();
+
+    // Modal
+    function openModal(){ document.getElementById('modalMask').classList.add('show'); }
+    function closeModal(){ document.getElementById('modalMask').classList.remove('show'); }
+    function confirmModal(){ showToast('success','已删除'); closeModal(); }
+
+    // 上传
+    const uploadArea = document.getElementById('uploadArea');
+    uploadArea.addEventListener('dragover', e=>{ e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', ()=> uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', e=>{ e.preventDefault(); uploadArea.classList.remove('dragover'); listFiles(e.dataTransfer.files); });
+    function listFiles(files){
+      const list = document.getElementById('fileList');
+      list.innerHTML = Array.from(files).map(f=>`<div>📎 ${f.name} <span style="color:var(--muted)">(${(f.size/1024).toFixed(1)}KB)</span></div>`).join('');
+    }
+
+    // 关闭消息（通知/ banner）
+    function closeMsg(el){
+      const wrap = el.closest('.msg');
+      if(!wrap) return;
+      wrap.style.transition = 'var(--transition)';
+      wrap.style.opacity = '0';
+      wrap.style.transform = 'translateY(-4px)';
+      setTimeout(()=>{ wrap.remove(); }, 200);
+    }
+
+    // 图表（极简清爽风格重做）
+    function initCharts(){
+      if(!window.echarts){
+        // 无网络或 CDN 不可用时，使用 SVG 静态兜底，确保页面可见
+        renderStaticCharts();
+        return;
+      }
+      // Frame2 官方配色系统
+      const palette = {
+        primary:'#5b8ff9',      // Frame2 主色 - 蓝色
+        secondary:'#5ad7a6',     // Frame2 辅色 - 绿色
+        muted:'#5D7092',        // Frame2 灰色
+        light:'#F6BD16',         // Frame2 黄色
+        grid:'rgba(0,0,0,0.08)',
+        axis:'rgba(0,0,0,0.15)',
+        text:'rgba(0,0,0,0.85)',
+        sub:'rgba(0,0,0,0.65)'
+      };
+      const tooltipStyle = {
+        backgroundColor:'#ffffff',
+        borderColor:'rgba(0,0,0,0.08)',
+        borderWidth:1,
+        textStyle:{color:palette.text,fontSize:12},
+        padding:8,
+        extraCssText:'box-shadow:none;border-radius:0'
+      };
+      const gridCommon = {left:24,right:12,top:8,bottom:24};
+      const xAxisCommon = {type:'category',axisTick:{show:false},axisLabel:{color:palette.sub,fontSize:12},axisLine:{lineStyle:{color:palette.axis}}};
+      const yAxisCommon = {type:'value',axisLabel:{color:palette.sub,fontSize:12},splitLine:{lineStyle:{color:palette.grid,type:'dashed'}}};
+
+      const funnel = echarts.init(document.getElementById('chart-funnel'), null, {renderer:'svg'});
+      funnel.setOption({
+        tooltip:{trigger:'item',...tooltipStyle},
+        series:[{type:'funnel',left:'10%',top:8,bottom:8,width:'80%',sort:'none',gap:6,
+          label:{show:true,position:'inside',color:palette.text,fontSize:12},
+          itemStyle:{borderColor:'#ffffff',borderWidth:1},
+          data:[
+            {name:'浏览人数',value:760,itemStyle:{color:palette.primary}},
+            {name:'咨询人数',value:600,itemStyle:{color:palette.muted}},
+            {name:'线索人数',value:400,itemStyle:{color:palette.light}},
+            {name:'报名人数',value:180,itemStyle:{color:palette.secondary}},
+          ]
+        }]
+      });
+
+      const pie = echarts.init(document.getElementById('chart-pie'), null, {renderer:'svg'});
+      // 渠道饼图改成截图样式：外部标签显示“名称 + 人数”，内部显示百分比
+      pie.setOption({
+        tooltip:{trigger:'item',formatter:'{b}: {c} 人 ({d}%)',...tooltipStyle},
+        legend:{show:false},
+        series:[
+          {
+            name:'渠道',type:'pie',radius:['0%','72%'],center:['50%','55%'],avoidLabelOverlap:true,
+            itemStyle:{borderColor:'#ffffff',borderWidth:1},
+            label:{
+              show:true,position:'outside',
+              formatter:(p)=>`${p.name}: ${p.value}`,
+              color:palette.text,
+              fontSize:12
+            },
+            labelLine:{length:12,lineStyle:{color:palette.grid}},
+            data:[
+              {value:529,name:'图例一',itemStyle:{color:palette.primary}},
+              {value:701,name:'图例二',itemStyle:{color:palette.muted}},
+              {value:200,name:'图例三',itemStyle:{color:palette.light}},
+            ]
+          }
+        ]
+      });
+
+      const donut = echarts.init(document.getElementById('chart-donut'), null, {renderer:'svg'});
+      donut.setOption({
+        tooltip:{trigger:'item',formatter:'{b}: {c} ({d}%)',...tooltipStyle},
+        graphic:[{type:'text',left:'center',top:'center',style:{text:'1430 人',textAlign:'center',fill:palette.text,fontSize:16}}],
+        series:[{type:'pie',radius:['60%','80%'],center:['50%','50%'],
+          label:{color:palette.text,fontSize:12},
+          labelLine:{length:10,length2:6,lineStyle:{color:palette.grid}},
+          itemStyle:{borderColor:'#ffffff',borderWidth:1},
+          data:[
+            {value:48,name:'渠道A',itemStyle:{color:palette.primary}},
+            {value:32,name:'渠道B',itemStyle:{color:palette.muted}},
+            {value:20,name:'其它',itemStyle:{color:palette.light}},
+          ]
+        }]
+      });
+
+      const radar = echarts.init(document.getElementById('chart-radar'), null, {renderer:'svg'});
+      radar.setOption({
+        legend:{bottom:0,textStyle:{color:palette.text,fontSize:12}},
+        radar:{
+          indicator:[
+            {name:'Design',max:100},{name:'Development',max:100},{name:'Marketing',max:100},
+            {name:'Sales',max:100},{name:'Support',max:100},{name:'Test',max:100}
+          ],
+          axisName:{color:palette.sub,fontSize:12},
+          splitLine:{lineStyle:{color:palette.grid}},
+          splitArea:{show:false},
+          shape:'circle'
+        },
+        series:[{type:'radar',data:[
+          {value:[60,73,80,85,70,60],name:'目标',lineStyle:{color:palette.primary,width:1.5},symbolSize:4},
+          {value:[55,68,70,70,65,54],name:'实际',lineStyle:{color:palette.muted,width:1.5},symbolSize:4}
+        ]}]
+      });
+
+      const bar = echarts.init(document.getElementById('chart-bar'), null, {renderer:'svg'});
+      bar.setOption({
+        tooltip:{trigger:'axis',...tooltipStyle},
+        grid:gridCommon,
+        xAxis:{...xAxisCommon,data:['产品A','产品B','产品C','产品D','产品E']},
+        yAxis:yAxisCommon,
+        series:[{
+          type:'bar',
+          data:[1200,2500,800,1450,1030],
+          barWidth:20,
+          itemStyle:{color:palette.primary},
+          label:{show:false}
+        }]
+      });
+
+      const line = echarts.init(document.getElementById('chart-line'), null, {renderer:'svg'});
+      line.setOption({
+        tooltip:{trigger:'axis',...tooltipStyle},
+        grid:gridCommon,
+        xAxis:{...xAxisCommon,data:['1月','2月','3月','4月','5月','6月','7月']},
+        yAxis:yAxisCommon,
+        series:[{type:'line',data:[20,15,18,24,30,26,38],smooth:false,lineStyle:{width:1,color:palette.primary},itemStyle:{color:palette.primary},symbolSize:3}]
+      });
+
+      const bubble = echarts.init(document.getElementById('chart-bubble'), null, {renderer:'svg'});
+      const bubbleData = [
+        [10,20,30,'A'],[20,35,50,'B'],[30,25,45,'C'],[40,40,70,'D'],[50,30,20,'E'],[60,35,30,'F']
+      ];
+      bubble.setOption({
+        tooltip:{trigger:'item',formatter:(p)=>`${p.value[3]}<br/>x:${p.value[0]} y:${p.value[1]} size:${p.value[2]}`,...tooltipStyle},
+        grid:gridCommon,
+        xAxis:{splitLine:{lineStyle:{color:palette.grid,type:'dashed'}},axisLabel:{color:palette.sub},axisLine:{lineStyle:{color:palette.axis}}},
+        yAxis:{splitLine:{lineStyle:{color:palette.grid,type:'dashed'}},axisLabel:{color:palette.sub},axisLine:{lineStyle:{color:palette.axis}}},
+        series:[{type:'scatter',data:bubbleData,symbolSize:(d)=>Math.max(8, d[2]/2),itemStyle:{color:palette.primary},label:{show:false},symbol:'circle'}]
+      });
+
+      const area = echarts.init(document.getElementById('chart-area'), null, {renderer:'svg'});
+      const categories = ['1990','1995','2000','2005','2010','2015','2020'];
+      const s1 = [60,58,55,53,50,48,46];
+      const s2 = [25,27,29,30,32,34,35];
+      const s3 = [15,15,16,17,18,18,19];
+      area.setOption({
+        tooltip:{trigger:'axis',...tooltipStyle},
+        legend:{top:0,right:0,textStyle:{color:palette.text,fontSize:12}},
+        grid:gridCommon,
+        xAxis:{...xAxisCommon,data:categories},
+        yAxis:{...yAxisCommon,max:100,axisLabel:{formatter:'{value}%',fontSize:12}} ,
+        series:[
+          {name:'类别1',type:'line',stack:'total',smooth:false,
+            areaStyle:{color:'rgba(0,0,0,0.06)'},
+            lineStyle:{color:palette.primary,width:1},
+            data:s1,itemStyle:{color:palette.primary}},
+          {name:'类别2',type:'line',stack:'total',smooth:false,
+            areaStyle:{color:'rgba(0,0,0,0.03)'},
+            lineStyle:{color:palette.muted,width:1},
+            data:s2,itemStyle:{color:palette.muted}},
+          {name:'类别3',type:'line',stack:'total',smooth:false,
+            areaStyle:{color:'rgba(0,0,0,0.01)'},
+            lineStyle:{color:palette.light,width:1},
+            data:s3,itemStyle:{color:palette.light}},
+        ]
+      });
+
+      // 工作台 · 销售数据（近7天 GMV 趋势）
+      let wbSales, wbOnline, wbRegion;
+      const salesEl = document.getElementById('wb-sales');
+      if(salesEl){
+        wbSales = echarts.init(salesEl, null, {renderer:'svg'});
+        const days = ['周一','周二','周三','周四','周五','周六','周日'];
+        const salesData = [128,146,132,160,178,205,190];
+        wbSales.setOption({
+          tooltip:{trigger:'axis',...tooltipStyle},
+          grid:gridCommon,
+          xAxis:{...xAxisCommon,data:days},
+          yAxis:yAxisCommon,
+          series:[{
+            type:'line',data:salesData,smooth:true,
+            lineStyle:{width:1.5,color:palette.primary},
+            itemStyle:{color:palette.primary},symbolSize:3,
+            areaStyle:{color:'rgba(91,143,249,0.15)'}
+          }]
+        });
+      }
+
+      // 工作台 · 用户同时在线人数（近24小时）
+      const onlineEl = document.getElementById('wb-online');
+      if(onlineEl){
+        wbOnline = echarts.init(onlineEl, null, {renderer:'svg'});
+        const hours = ['0','4','8','12','16','20','24'];
+        const onlineData = [120,180,150,220,200,180,140];
+        wbOnline.setOption({
+          tooltip:{trigger:'axis',...tooltipStyle},
+          grid:gridCommon,
+          xAxis:{...xAxisCommon,data:hours},
+          yAxis:yAxisCommon,
+          series:[{
+            type:'line',data:onlineData,smooth:true,
+            lineStyle:{width:1.5,color:palette.secondary},
+            itemStyle:{color:palette.secondary},symbolSize:3,
+            areaStyle:{color:'rgba(90,216,166,0.18)'}
+          }]
+        });
+      }
+
+      // 工作台 · 订单分布区域（Top 6）
+      const regionEl = document.getElementById('wb-region');
+      if(regionEl){
+        wbRegion = echarts.init(regionEl, null, {renderer:'svg'});
+        const regions = ['华东','华南','华北','华中','西南','西北'];
+        const regionData = [320,280,300,240,210,190];
+        wbRegion.setOption({
+          tooltip:{trigger:'axis',...tooltipStyle},
+          grid:gridCommon,
+          xAxis:{...xAxisCommon,data:regions},
+          yAxis:yAxisCommon,
+          series:[{
+            type:'bar',data:regionData,barWidth:14,
+            itemStyle:{color:palette.primary}
+          }]
+        });
+      }
+
+      window.addEventListener('resize',()=>{ funnel.resize(); pie.resize(); donut.resize(); radar.resize(); bar.resize(); line.resize(); bubble.resize(); area.resize(); if(wbSales) wbSales.resize(); if(wbOnline) wbOnline.resize(); if(wbRegion) wbRegion.resize(); });
+    }
+
+    // 静态兜底图表（SVG）
+    function renderStaticCharts(){
+      const grid = '#e5e6eb'; const blue = '#5b8ff9'; const green = '#5ad7a6'; const yellow = '#F6BD16'; const purple = '#5D7092'; const orange = '#E8684A'; const teal = '#6DC8EC';
+      // 漏斗
+      document.getElementById('chart-funnel').innerHTML = `
+        <svg width="360" height="220">
+          <rect x="20" y="20" width="320" height="160" fill="#fff" stroke="${grid}"/>
+          <polygon points="60,30 300,30 260,60 100,60" fill="${blue}"/>
+          <polygon points="80,70 280,70 240,100 120,100" fill="${green}"/>
+          <polygon points="100,110 260,110 220,140 140,140" fill="${yellow}"/>
+          <polygon points="120,150 240,150 210,180 150,180" fill="${orange}"/>
+        </svg>`;
+      // 饼图
+      document.getElementById('chart-pie').innerHTML = `
+        <svg width="360" height="220">
+          <circle cx="120" cy="110" r="70" fill="#eef0f4"/>
+          <circle cx="120" cy="110" r="70" fill="none" stroke="${blue}" stroke-width="140" stroke-dasharray="120 320" transform="rotate(-90 120 110)"/>
+          <circle cx="120" cy="110" r="70" fill="none" stroke="${green}" stroke-width="140" stroke-dasharray="90 350" transform="rotate(-10 120 110)"/>
+          <circle cx="120" cy="110" r="70" fill="none" stroke="${yellow}" stroke-width="140" stroke-dasharray="60 380" transform="rotate(40 120 110)"/>
+        </svg>`;
+      // 环形图
+      document.getElementById('chart-donut').innerHTML = `
+        <svg width="360" height="220">
+          <circle cx="180" cy="110" r="70" fill="none" stroke="#eef0f4" stroke-width="30"/>
+          <circle cx="180" cy="110" r="70" fill="none" stroke="${green}" stroke-width="30" stroke-dasharray="220 220" transform="rotate(-120 180 110)"/>
+          <circle cx="180" cy="110" r="70" fill="none" stroke="${blue}" stroke-width="30" stroke-dasharray="160 280" transform="rotate(-10 180 110)"/>
+          <text x="180" y="115" text-anchor="middle" font-size="18" fill="#374151" font-weight="600">1430 人</text>
+        </svg>`;
+      // 雷达图（简化多边形）
+      document.getElementById('chart-radar').innerHTML = `
+        <svg width="360" height="220">
+          <polygon points="180,50 270,90 250,170 110,170 90,90" fill="rgba(91,143,249,0.25)" stroke="${blue}"/>
+          <polygon points="180,70 250,100 230,155 130,155 110,100" fill="rgba(90,216,166,0.25)" stroke="${green}"/>
+        </svg>`;
+      // 柱状图
+      document.getElementById('chart-bar').innerHTML = `
+        <svg width="360" height="220">
+          <rect x="40" y="30" width="300" height="160" fill="#fff" stroke="${grid}"/>
+          <line x1="40" y1="70" x2="340" y2="70" stroke="${grid}"/>
+          <line x1="40" y1="110" x2="340" y2="110" stroke="${grid}"/>
+          <line x1="40" y1="150" x2="340" y2="150" stroke="${grid}"/>
+          <rect x="60" y="120" width="40" height="60" fill="${blue}"/>
+          <rect x="120" y="80" width="40" height="100" fill="${blue}"/>
+          <rect x="180" y="140" width="40" height="40" fill="${blue}"/>
+          <rect x="240" y="100" width="40" height="80" fill="${blue}"/>
+        </svg>`;
+      // 折线图
+      document.getElementById('chart-line').innerHTML = `
+        <svg width="360" height="220">
+          <rect x="40" y="30" width="300" height="160" fill="#fff" stroke="${grid}"/>
+          <polyline points="40,180 90,160 140,150 190,130 240,110 290,140 340,100" fill="none" stroke="${blue}" stroke-width="2"/>
+          <circle cx="90" cy="160" r="3" fill="${blue}"/>
+          <circle cx="190" cy="130" r="3" fill="${blue}"/>
+          <circle cx="290" cy="140" r="3" fill="${blue}"/>
+        </svg>`;
+      // 气泡散点
+      document.getElementById('chart-bubble').innerHTML = `
+        <svg width="360" height="220">
+          <rect x="40" y="30" width="300" height="160" fill="#fff" stroke="${grid}"/>
+          <circle cx="80" cy="160" r="10" fill="${teal}"/>
+          <circle cx="130" cy="120" r="14" fill="${teal}"/>
+          <circle cx="180" cy="140" r="12" fill="${teal}"/>
+          <circle cx="230" cy="90" r="20" fill="${teal}"/>
+          <circle cx="280" cy="130" r="9" fill="${teal}"/>
+          <circle cx="320" cy="80" r="12" fill="${teal}"/>
+        </svg>`;
+      // 百分比堆叠面积
+      document.getElementById('chart-area').innerHTML = `
+        <svg width="360" height="220">
+          <rect x="40" y="30" width="300" height="160" fill="#fff" stroke="${grid}"/>
+          <polygon points="40,170 80,168 120,165 160,160 200,155 240,150 280,148 340,146 340,190 40,190" fill="rgba(91,143,249,0.35)" stroke="${blue}"/>
+          <polygon points="40,190 80,188 120,186 160,183 200,180 240,178 280,175 340,172 340,190 40,190" fill="rgba(90,216,166,0.35)" stroke="${green}"/>
+          <polygon points="40,190 80,190 120,190 160,189 200,188 240,188 280,187 340,186 340,190 40,190" fill="rgba(246,189,22,0.35)" stroke="${yellow}"/>
+        </svg>`;
+
+      // 工作台 · 销售数据（静态）
+      var salesBox = document.getElementById('wb-sales');
+      if(salesBox){
+        salesBox.innerHTML = `
+          <svg width="360" height="160">
+            <rect x="20" y="20" width="320" height="120" fill="#fff" stroke="${grid}"/>
+            <polyline points="20,130 70,120 120,115 170,100 220,85 270,65 320,75" fill="rgba(91,143,249,0.15)" stroke="${blue}" stroke-width="2"/>
+          </svg>`;
+      }
+      // 工作台 · 在线人数（静态）
+      var onlineBox = document.getElementById('wb-online');
+      if(onlineBox){
+        onlineBox.innerHTML = `
+          <svg width="360" height="160">
+            <rect x="20" y="20" width="320" height="120" fill="#fff" stroke="${grid}"/>
+            <polyline points="20,120 70,90 120,100 170,70 220,80 270,95 320,110" fill="rgba(90,216,166,0.18)" stroke="${green}" stroke-width="2"/>
+          </svg>`;
+      }
+      // 工作台 · 区域分布（静态）
+      var regionBox = document.getElementById('wb-region');
+      if(regionBox){
+        regionBox.innerHTML = `
+          <svg width="360" height="160">
+            <rect x="20" y="20" width="320" height="120" fill="#fff" stroke="${grid}"/>
+            <rect x="35" y="100" width="30" height="40" fill="${blue}"/>
+            <rect x="85" y="90" width="30" height="50" fill="${blue}"/>
+            <rect x="135" y="95" width="30" height="45" fill="${blue}"/>
+            <rect x="185" y="110" width="30" height="30" fill="${blue}"/>
+            <rect x="235" y="115" width="30" height="25" fill="${blue}"/>
+            <rect x="285" y="120" width="30" height="20" fill="${blue}"/>
+          </svg>`;
+      }
+    }
+
+    // 多行输入框计数
+    function updateTaCount(el){
+      const id = el.dataset.count; if(!id) return;
+      const countEl = document.getElementById(id); if(!countEl) return;
+      const max = Number(el.getAttribute('maxlength')) || 1000;
+      const len = el.value.length;
+      countEl.textContent = `${len}/${max}`;
+    }
+    // 初始化计数（包含预置值）
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.querySelectorAll('textarea[data-count]').forEach(el=>updateTaCount(el));
+      initCharts();
+    });
+  </script>
+  <script>
+    // 简易收起/展开交互：仅用于规范演示
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('.collapse-link').forEach(function(link){
+        link.addEventListener('click', function(e){
+          e.preventDefault();
+          var card = link.closest('.filter-card');
+          var bar = card && card.querySelector('.filter-bar');
+          if(!bar) return;
+          bar.classList.toggle('collapsed');
+          link.textContent = bar.classList.contains('collapsed') ? '展开搜索' : '收起搜索';
+        });
+      });
+    });
+
+    // 结果页：复制按钮示例
+    document.addEventListener('click', function(e){
+      var cp = e.target.closest('.copy-btn');
+      if(!cp) return;
+      e.preventDefault();
+      var txt = cp.getAttribute('data-copy') || '';
+      if(!txt) return;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){
+          var old = cp.textContent;
+          cp.textContent = '已复制';
+          setTimeout(function(){ cp.textContent = old || '复制'; }, 1200);
+        }).catch(function(){ /* ignore */ });
+      }
+    });
+
+    // 工作台：快捷入口/待办/关注交互（演示用）
+    document.addEventListener('click', function(e){
+      var quick = e.target.closest('.quick-item');
+      if(quick){ e.preventDefault(); showToast('info', '打开 '+(quick.dataset.name || '入口')); }
+
+      var chk = e.target.closest('.todo-check');
+      if(chk){ var item = chk.closest('.todo-item'); if(item){ item.classList.toggle('done'); showToast('success', item.classList.contains('done') ? '已完成' : '标记为未完成'); } }
+
+      var star = e.target.closest('.star-btn');
+      if(star){ star.classList.toggle('active'); showToast('info', star.classList.contains('active') ? '已关注' : '已取消关注'); }
+    });
+
+    // 上传交互示例：拖拽高亮与文件列表渲染（演示用）
+    (function(){
+      var area = document.getElementById('uploadArea');
+      var fileInput = document.getElementById('fileInput');
+      var list = document.getElementById('fileList');
+      if(!area) return;
+
+      ['dragenter','dragover'].forEach(function(evt){
+        area.addEventListener(evt,function(e){ e.preventDefault(); area.classList.add('dragover'); });
+      });
+      ['dragleave','drop'].forEach(function(evt){
+        area.addEventListener(evt,function(e){ e.preventDefault(); area.classList.remove('dragover'); });
+      });
+
+      area.addEventListener('drop',function(e){
+        var files = Array.prototype.slice.call(e.dataTransfer.files);
+        renderUploadRows(files);
+      });
+      if(fileInput){
+        fileInput.addEventListener('change',function(e){
+          var files = Array.prototype.slice.call(e.target.files);
+          renderUploadRows(files);
+        });
+      }
+
+      function renderUploadRows(files){
+        if(!list) return;
+        list.innerHTML='';
+        files.forEach(function(f){
+          var row = document.createElement('div');
+          row.className = 'upl-row uploading';
+          row.innerHTML = `
+            <div class="upl-left">
+              <svg class="upl-ico" viewBox="0 0 24 24"><path d="M3 7h18"></path><path d="M3 12h18"></path><path d="M3 17h18"></path></svg>
+              <span>${f.name || '未命名文件'}</span>
+            </div>
+            <div class="upl-bar"><div class="upl-fill" style="width:${(30+Math.random()*60).toFixed(0)}%"></div></div>
+            <div class="upl-actions"><span class="upl-status">正在上传</span><a>暂停</a><a>取消</a></div>
+          `;
+          list.appendChild(row);
+          // 模拟完成与失败
+          setTimeout(function(){
+            var ok = Math.random() > 0.3;
+            if(ok){
+              row.classList.remove('uploading');
+              row.classList.add('done');
+              row.querySelector('.upl-fill').style.width='100%';
+              row.querySelector('.upl-actions').innerHTML = '<span class="upl-status success"><svg class="status-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9 12l2 2 4-4"></path></svg>上传成功</span>';
+            }else{
+              row.classList.remove('uploading');
+              row.classList.add('fail');
+              row.querySelector('.upl-fill').style.width='10%';
+              row.querySelector('.upl-actions').innerHTML = '<span class="upl-status" style="color:var(--error)">上传失败</span><a>重传</a><a>取消</a>';
+            }
+          }, 800 + Math.random()*1000);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
